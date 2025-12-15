@@ -1,7 +1,7 @@
 # Compiler and flags
 CXX = hipcc
 CXXFLAGS = -std=c++17 -O3
-CFLAGS = -std=c11 -O3          # Pure C flags
+CFLAGS = -std=c11 -O3
 
 LDFLAGS_GEMM = -lhipblas -lopenblas -ltbb
 LDFLAGS_VEC  = -ltbb
