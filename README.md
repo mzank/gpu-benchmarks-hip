@@ -1,10 +1,11 @@
 # HIP
 
 This project demonstrates GPU-accelerated computations using **HIP** on AMD GPUs.  
-It contains two examples:
+It contains:
 
 1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS.  
 2. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
+3. **MPI GPU Ring with CPU-based MPI (pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based MPI (non-GPU-aware).
 
 ---
 
@@ -12,7 +13,7 @@ It contains two examples:
 
 All example results were obtained on **1 node with 4 AMD MI300A APUs** with the following software stack:
 
-- ROCm 7.1.1  
+- ROCm 7.1.1  (tested, should work on other ROCm-supported AMD GPUs)
 - openMPI 5.0.7-ucc1.4.4-ucx1.18.1   
 - OpenBLAS 0.3.20  
 
@@ -26,9 +27,11 @@ The code should work on other ROCm-supported AMD GPUs, although performance and 
 - ROCm (e.g. 7.1.1 compatible)
 - HIP and hipBLAS
 - BLAS library (e.g. OpenBLAS)
-- MPI library (e.g. OpenMPI) 
+- MPI library (e.g. OpenMPI) capable of binding to NUMA nodes
 - GNU Make
 - C++17-compatible compiler (e.g. `hipcc`)
+
+> **Note:** A NUMA library (`libnuma`) is **optional**. It can improve CPU memory locality on multi-socket systems, but OpenMPI’s `--bind-to numa` is sufficient for most setups.
 
 ---
 
@@ -43,6 +46,7 @@ make
 # Or build individually
 make build/gemm
 make build/vectorreduction
+make build/mpigpuring
 ```
 
 This will create the binaries in the build/ directory.
@@ -63,9 +67,11 @@ After building, you can run the programs as follows:
 ./build/vectorreduction
 ```
 
-Each program prints:
-- Computation times on CPU and GPU
-- Validation results (maximum difference between CPU and GPU results)
+### Run MPI GPU Ring example with CPU-based MPI
+```bash
+export HSA_ENABLE_SDMA=1  # Enable asynchronous DMA for GPU-to-GPU transfers
+mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/mpigpuring
+```
 
 Program outputs shown below are also saved under the `output/` directory
 (e.g. `output/gemm_output.txt`).
@@ -88,6 +94,20 @@ Vector Reduction (vectorreduction.cpp)
 CPU sum: 1.07374e+09, time: 43.1988 ms
 GPU sum: 1.07374e+09, time: 4.56007 ms
 Maximum |CPU - GPU| difference: 0
+```
+
+MPI GPU Ring with CPU-based MPI (mpigpuring.c)
+```yaml
+mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./mpigpuring
+Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0] | Recv[0] | Rank 2 BW (GB/s) | Send[0] | Recv[0] | Rank 3 BW (GB/s) | Send[0] | Recv[0] |
+        67.11 |            11.76 |    1.00 |    4.00 |            11.82 |    2.00 |    1.00 |            11.82 |    3.00 |    2.00 |            11.76 |    4.00 |    3.00 |
+       134.22 |            11.68 |    1.00 |    4.00 |            11.76 |    2.00 |    1.00 |            11.77 |    3.00 |    2.00 |            11.69 |    4.00 |    3.00 |
+       268.44 |            11.93 |    1.00 |    4.00 |            12.02 |    2.00 |    1.00 |            12.02 |    3.00 |    2.00 |            11.93 |    4.00 |    3.00 |
+       536.87 |            12.04 |    1.00 |    4.00 |            12.11 |    2.00 |    1.00 |            12.11 |    3.00 |    2.00 |            12.04 |    4.00 |    3.00 |
+      1073.74 |            12.08 |    1.00 |    4.00 |            12.07 |    2.00 |    1.00 |            12.07 |    3.00 |    2.00 |            12.08 |    4.00 |    3.00 |
+      2147.48 |            12.13 |    1.00 |    4.00 |            12.11 |    2.00 |    1.00 |            12.11 |    3.00 |    2.00 |            12.13 |    4.00 |    3.00 |
+      4294.97 |            12.15 |    1.00 |    4.00 |            12.24 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
+      8589.93 |            12.15 |    1.00 |    4.00 |            12.23 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
 ```
 
 ---

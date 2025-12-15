@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vectorreduction_2ecpp_10',['vectorreduction.cpp',['../vectorreduction_8cpp.html',1,'']]]
+  ['mpigpuring_2ec_11',['mpigpuring.c',['../mpigpuring_8c.html',1,'']]]
 ];
