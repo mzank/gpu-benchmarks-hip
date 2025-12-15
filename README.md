@@ -21,6 +21,76 @@ The code should work on other ROCm-supported AMD GPUs, although performance and 
 
 ---
 
+### NUMA Hardware Configuration
+
+The system used for testing has 4 NUMA nodes with the following configuration (output from `numactl --hardware`):
+```yaml
+available: 4 nodes (0-3)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119
+node 0 size: 128193 MB
+node 0 free: 126397 MB
+node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143
+node 1 size: 128719 MB
+node 1 free: 127384 MB
+node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167
+node 2 size: 128719 MB
+node 2 free: 126290 MB
+node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+node 3 size: 128661 MB
+node 3 free: 127346 MB
+node distances:
+node   0   1   2   3 
+  0:  10  32  32  32 
+  1:  32  10  32  32 
+  2:  32  32  10  32 
+  3:  32  32  32  10 
+```
+> **Note:** This NUMA configuration was used to guide CPU affinity in the MPI GPU ring examples. For reproducibility, the same output is saved in `output/numa_info.txt`.
+
+---
+
+### GPU Topology
+
+The ROCm GPU topology on this system (output from `rocm-smi --showtopo`) is:
+```yaml
+============================ ROCm System Management Interface ============================
+
+================================ Weight between two GPUs =================================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            15           15           15           
+GPU1   15           0            15           15           
+GPU2   15           15           0            15           
+GPU3   15           15           15           0            
+
+================================= Hops between two GPUs ==================================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            1            1            1            
+GPU1   1            0            1            1            
+GPU2   1            1            0            1            
+GPU3   1            1            1            0            
+
+=============================== Link Type between two GPUs ===============================
+       GPU0         GPU1         GPU2         GPU3         
+GPU0   0            XGMI         XGMI         XGMI         
+GPU1   XGMI         0            XGMI         XGMI         
+GPU2   XGMI         XGMI         0            XGMI         
+GPU3   XGMI         XGMI         XGMI         0            
+
+======================================= Numa Nodes =======================================
+GPU[0]		: (Topology) Numa Node: 0
+GPU[0]		: (Topology) Numa Affinity: 0
+GPU[1]		: (Topology) Numa Node: 1
+GPU[1]		: (Topology) Numa Affinity: 1
+GPU[2]		: (Topology) Numa Node: 2
+GPU[2]		: (Topology) Numa Affinity: 2
+GPU[3]		: (Topology) Numa Node: 3
+GPU[3]		: (Topology) Numa Affinity: 3
+================================== End of ROCm SMI Log ===================================
+```
+> **Note:** This GPU topology output is saved in `output/gpu_topology.txt`.
+
+---
+
 ## Requirements
 
 - AMD GPU supported by ROCm
@@ -31,7 +101,7 @@ The code should work on other ROCm-supported AMD GPUs, although performance and 
 - GNU Make
 - C++17-compatible compiler (e.g. `hipcc`)
 
-> **Note:** A NUMA library (`libnuma`) is **optional**. It can improve CPU memory locality on multi-socket systems, but OpenMPI’s `--bind-to numa` is sufficient for most setups.
+> **Note:** A NUMA library (`libnuma`) is **optional**. It can improve CPU memory locality on multi-socket systems, but OpenMPI’s `--bind-to numa` is sufficient for most setups. The Makefile may link -lnuma; if your system does not have NUMA, you can remove it.
 
 ---
 
@@ -74,7 +144,7 @@ mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/mpigpuring
 ```
 
 Program outputs shown below are also saved under the `output/` directory
-(e.g. `output/gemm_output.txt`).
+(e.g. `output/gemm_output.txt`, `output/vector_output.txt`, `output/mpirun_output.txt`, `output/numa_info.txt`).
 
 ---
 
