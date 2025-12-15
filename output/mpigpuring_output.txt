@@ -1,4 +1,3 @@
-mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./mpigpuring
 [hostname:PID] Rank 0 bound to package[0][core:0-23]
 [hostname:PID] Rank 1 bound to package[1][core:24-47]
 [hostname:PID] Rank 2 bound to package[2][core:48-71]

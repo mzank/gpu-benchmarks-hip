@@ -11,15 +11,17 @@ LDFLAGS_MPI  = -lmpi -lnuma
 SRC_GEMM = src/gemm.cpp
 SRC_VEC  = src/vectorreduction.cpp
 SRC_MPI  = src/mpigpuring.c
+SRC_MPI_AWARE = src/mpigpuawarering.c
 
 # Output binaries
 BUILD_DIR = build
 GEMM_BIN = $(BUILD_DIR)/gemm
 VEC_BIN  = $(BUILD_DIR)/vectorreduction
 MPI_BIN  = $(BUILD_DIR)/mpigpuring
+MPI_AWARE_BIN = $(BUILD_DIR)/mpigpuawarering
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
@@ -31,6 +33,10 @@ $(VEC_BIN): $(SRC_VEC)
 
 # Build MPI GPU Ring with CPU-based MPI
 $(MPI_BIN): $(SRC_MPI)
+	$(CXX) $(CFLAGS) $^ $(LDFLAGS_MPI) -o $@
+
+# Build MPI GPU Ring with GPU-aware MPI
+$(MPI_AWARE_BIN): $(SRC_MPI_AWARE)
 	$(CXX) $(CFLAGS) $^ $(LDFLAGS_MPI) -o $@
 
 # Create build directory

@@ -1,19 +1,16 @@
 /**
- * @file mpigpuring.c
- * @brief Measure GPU-to-GPU ring bandwidth using HIP and CPU-based MPI (non-GPU-aware)
+ * @file mpigpuawarering.c
+ * @brief Measure GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI
  *
  * This example demonstrates:
  * - GPU memory allocation
- * - Host memory allocation for MPI communication
- * - Data transfer GPU ↔ CPU
+ * - Direct MPI communication on GPU buffers (GPU-aware MPI)
  * - MPI ring communication
  * - Performance measurement
  * - Verification of first element
  *
  * End-to-end timing includes:
- *   GPU → CPU memcpy
- *   CPU MPI send/recv
- *   CPU → GPU memcpy
+ *   GPU MPI send/recv only
  *
  * NUMA library usage is optional. If available, it improves CPU memory locality.
  * If not available, the code will still run correctly.
@@ -26,19 +23,19 @@
  * [hostname:PID] Rank 3 bound to package[3][core:72-95]
  *
  * Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0] | Recv[0] | Rank 2 BW (GB/s) | Send[0] | Recv[0] | Rank 3 BW (GB/s) | Send[0] | Recv[0] |
- *         67.11 |            11.76 |    1.00 |    4.00 |            11.82 |    2.00 |    1.00 |            11.82 |    3.00 |    2.00 |            11.76 |    4.00 |    3.00 |
- *        134.22 |            11.68 |    1.00 |    4.00 |            11.76 |    2.00 |    1.00 |            11.77 |    3.00 |    2.00 |            11.69 |    4.00 |    3.00 |
- *        268.44 |            11.93 |    1.00 |    4.00 |            12.02 |    2.00 |    1.00 |            12.02 |    3.00 |    2.00 |            11.93 |    4.00 |    3.00 |
- *        536.87 |            12.04 |    1.00 |    4.00 |            12.11 |    2.00 |    1.00 |            12.11 |    3.00 |    2.00 |            12.04 |    4.00 |    3.00 |
- *       1073.74 |            12.08 |    1.00 |    4.00 |            12.07 |    2.00 |    1.00 |            12.07 |    3.00 |    2.00 |            12.08 |    4.00 |    3.00 |
- *       2147.48 |            12.13 |    1.00 |    4.00 |            12.11 |    2.00 |    1.00 |            12.11 |    3.00 |    2.00 |            12.13 |    4.00 |    3.00 |
- *       4294.97 |            12.15 |    1.00 |    4.00 |            12.24 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
- *       8589.93 |            12.15 |    1.00 |    4.00 |            12.23 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
+ *         67.11 |            37.46 |    1.00 |    4.00 |            37.47 |    2.00 |    1.00 |            37.49 |    3.00 |    2.00 |            37.49 |    4.00 |    3.00 |
+ *        134.22 |           158.22 |    1.00 |    4.00 |           158.03 |    2.00 |    1.00 |           158.43 |    3.00 |    2.00 |           158.46 |    4.00 |    3.00 |
+ *        268.44 |           170.04 |    1.00 |    4.00 |           170.04 |    2.00 |    1.00 |           170.23 |    3.00 |    2.00 |           170.24 |    4.00 |    3.00 |
+ *        536.87 |           169.34 |    1.00 |    4.00 |           168.98 |    2.00 |    1.00 |           169.48 |    3.00 |    2.00 |           169.49 |    4.00 |    3.00 |
+ *       1073.74 |           169.64 |    1.00 |    4.00 |           169.61 |    2.00 |    1.00 |           169.83 |    3.00 |    2.00 |           169.83 |    4.00 |    3.00 |
+ *       2147.48 |           170.03 |    1.00 |    4.00 |           170.00 |    2.00 |    1.00 |           169.71 |    3.00 |    2.00 |           169.71 |    4.00 |    3.00 |
+ *       4294.97 |           171.27 |    1.00 |    4.00 |           171.24 |    2.00 |    1.00 |           171.04 |    3.00 |    2.00 |           171.04 |    4.00 |    3.00 |
+ *       8589.93 |           171.50 |    1.00 |    4.00 |           171.44 |    2.00 |    1.00 |           171.25 |    3.00 |    2.00 |           171.25 |    4.00 |    3.00 |
  * \endcode
  *
  * Hardware and Software Environment:
  * - ROCm 7.1.1
- * - openMPI 5.0.7-ucc1.4.4-ucx1.18.1 (CPU-only)
+ * - openMPI 5.0.7-ucc1.4.4-ucx1.18.1 (GPU-aware)
  *
  * Author: Marco Zank
  * Date: 2025-12-15
@@ -66,7 +63,7 @@
 #define N_REPEAT      10            /* Number of repetitions per message size */
 
 /* ------------------------------------------------------------- */
-/* HIP error checking macro                                       */
+/* HIP error checking macro                                      */
 /* ------------------------------------------------------------- */
 #define HIP_CHECK(call)                                                \
     do {                                                               \
@@ -80,7 +77,7 @@
     } while (0)
 
 /* ------------------------------------------------------------- */
-/* Memory allocation check macro                                   */
+/* Memory allocation check macro                                 */
 /* ------------------------------------------------------------- */
 #define CHECK_ALLOC(ptr)                                               \
     do {                                                               \
@@ -92,7 +89,7 @@
     } while (0)
 
 /* ------------------------------------------------------------- */
-/* Main program                                                   */
+/* Main program                                                  */
 /* ------------------------------------------------------------- */
 int main(int argc, char *argv[])
 {
@@ -152,7 +149,7 @@ int main(int argc, char *argv[])
     }
 
     /* ------------------------- */
-    /* Loop over message sizes    */
+    /* Loop over message sizes   */
     /* ------------------------- */
     for (size_t msg_size = MIN_MSG_SIZE;
          msg_size <= MAX_MSG_SIZE;
@@ -174,26 +171,22 @@ int main(int argc, char *argv[])
         HIP_CHECK(hipMalloc((void**)&d_recv, msg_size));
 
         /* ------------------------- */
-        /* Allocate host buffers for MPI */
-        /* ------------------------- */
-        double *h_send = malloc(msg_size);
-        double *h_recv = malloc(msg_size);
-        CHECK_ALLOC(h_send);
-        CHECK_ALLOC(h_recv);
-
-        /* ------------------------- */
         /* Initialize host send buffer */
         /* ------------------------- */
+        double *h_init = malloc(msg_size);
+        CHECK_ALLOC(h_init);
         for (size_t i = 0; i < count; i++) {
-            h_send[i] = (double)(world_rank + 1);
+            h_init[i] = (double)(world_rank + 1);
         }
 
-        HIP_CHECK(hipMemcpy(d_send, h_send, msg_size, hipMemcpyHostToDevice));
+        HIP_CHECK(hipMemcpy(d_send, h_init, msg_size, hipMemcpyHostToDevice));
+        free(h_init);
+
         HIP_CHECK(hipDeviceSynchronize());
         MPI_Barrier(MPI_COMM_WORLD);
 
         /* ------------------------- */
-        /* Timed ring communication   */
+        /* Timed ring communication */
         /* ------------------------- */
         double total_time = 0.0;
         MPI_Request reqs[2];
@@ -203,19 +196,11 @@ int main(int argc, char *argv[])
             HIP_CHECK(hipDeviceSynchronize());
             double t0 = MPI_Wtime();
 
-            /* GPU → CPU */
-            HIP_CHECK(hipMemcpy(h_send, d_send, msg_size, hipMemcpyDeviceToHost));
-            HIP_CHECK(hipDeviceSynchronize());
-
-            /* CPU MPI */
-            MPI_Irecv(h_recv, mpi_count, MPI_DOUBLE, prev, 0, MPI_COMM_WORLD, &reqs[0]);
-            MPI_Isend(h_send, mpi_count, MPI_DOUBLE, next, 0, MPI_COMM_WORLD, &reqs[1]);
+            MPI_Irecv(d_recv, mpi_count, MPI_DOUBLE, prev, 0, MPI_COMM_WORLD, &reqs[0]);
+            MPI_Isend(d_send, mpi_count, MPI_DOUBLE, next, 0, MPI_COMM_WORLD, &reqs[1]);
             MPI_Waitall(2, reqs, MPI_STATUSES_IGNORE);
 
-            /* CPU → GPU */
-            HIP_CHECK(hipMemcpy(d_recv, h_recv, msg_size, hipMemcpyHostToDevice));
             HIP_CHECK(hipDeviceSynchronize());
-
             total_time += MPI_Wtime() - t0;
         }
 
@@ -270,12 +255,10 @@ int main(int argc, char *argv[])
         }
 
         /* ------------------------- */
-        /* Cleanup buffers           */
+        /* Cleanup buffers          */
         /* ------------------------- */
         HIP_CHECK(hipFree(d_send));
         HIP_CHECK(hipFree(d_recv));
-        free(h_send);
-        free(h_recv);
     }
 
     MPI_Comm_free(&host_comm);

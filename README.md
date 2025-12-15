@@ -1,23 +1,28 @@
 # HIP
 
-This project demonstrates GPU-accelerated computations using **HIP** on AMD GPUs.  
-It contains:
+This project demonstrates **GPU-accelerated computations using HIP** on AMD GPUs.  
+It includes the following examples:
 
 1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS.  
 2. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
-3. **MPI GPU Ring with CPU-based MPI (pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based MPI (non-GPU-aware).
+3. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
+4. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
 
 ---
 
 ## Hardware and Software Environment
 
-All example results were obtained on **1 node with 4 AMD MI300A APUs** with the following software stack:
+All example results were obtained on **1 node with 4 AMD MI300A APUs**.
 
-- ROCm 7.1.1  (tested, should work on other ROCm-supported AMD GPUs)
-- openMPI 5.0.7-ucc1.4.4-ucx1.18.1   
+> **Note:** Each MI300A integrates Zen 4 CPU cores and a CDNA3 GPU sharing HBM memory. NUMA locality therefore plays a critical role in both CPU and GPU performance.
+
+### Software Stack
+
+- ROCm 7.1.1 (tested, should work on other ROCm-supported AMD GPUs)
+- OpenMPI 5.0.7 (with UCC 1.4.4, UCX 1.18.1, ROCm support)
 - OpenBLAS 0.3.20  
 
-The code should work on other ROCm-supported AMD GPUs, although performance and numerical results may vary.
+The code should work on other ROCm-supported AMD GPUs, though performance and numerical results may vary.
 
 ---
 
@@ -97,11 +102,12 @@ GPU[3]		: (Topology) Numa Affinity: 3
 - ROCm (e.g. 7.1.1 compatible)
 - HIP and hipBLAS
 - BLAS library (e.g. OpenBLAS)
-- MPI library (e.g. OpenMPI) capable of binding to NUMA nodes
+- MPI library (e.g. OpenMPI) with NUMA binding support
 - GNU Make
-- C++17-compatible compiler (e.g. `hipcc`)
+- C++17-compatible compiler for HIP/C++ sources (e.g. `hipcc`)
+- C11-compatible compiler for pure C MPI examples (e.g. `hipcc`)
 
-> **Note:** A NUMA library (`libnuma`) is **optional**. It can improve CPU memory locality on multi-socket systems, but OpenMPI’s `--bind-to numa` is sufficient for most setups. The Makefile may link -lnuma; if your system does not have NUMA, you can remove it.
+> **Optional:** `libnuma` can improve CPU memory locality on multi-socket systems. OpenMPI’s `--bind-to numa` is sufficient for most setups. If `libnuma` is not installed, it can be removed from the linker flags in the Makefile.
 
 ---
 
@@ -117,9 +123,10 @@ make
 make build/gemm
 make build/vectorreduction
 make build/mpigpuring
+make build/mpigpuawarering
 ```
 
-This will create the binaries in the build/ directory.
+All binaries are generated in the `build/` directory.
 
 ---
 
@@ -139,12 +146,23 @@ After building, you can run the programs as follows:
 
 ### Run MPI GPU Ring example with CPU-based MPI
 ```bash
-export HSA_ENABLE_SDMA=1  # Enable asynchronous DMA for GPU-to-GPU transfers
+export HSA_ENABLE_SDMA=1  # Controls GPU copy engine usage; impact depends on MPI data path (host-staged vs GPU-aware)
 mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/mpigpuring
 ```
 
+> **Note:** This configuration uses **host-staged communication**.
+`HSA_ENABLE_SDMA` controls the use of GPU copy engines; behavior depends on the MPI data path.
+
+### Run MPI GPU Ring example with GPU-aware MPI
+```bash
+export HSA_ENABLE_SDMA=0  # Controls GPU copy engine usage; impact depends on MPI data path (host-staged vs GPU-aware)
+mpirun -np 4 -mca pml ucx --bind-to numa --map-by numa --report-bindings ./build/mpigpuawarering
+```
+
+> **Note:** This example requires a **GPU-aware MPI** build (e.g. OpenMPI with UCX and ROCm support). GPU device pointers are passed directly to `MPI_Isend`/`Irecv` without host staging.
+
 Program outputs shown below are also saved under the `output/` directory
-(e.g. `output/gemm_output.txt`, `output/vector_output.txt`, `output/mpirun_output.txt`, `output/numa_info.txt`).
+(e.g. `output/gemm_output.txt`, `output/numa_info.txt`, `output/gpu_topology.txt`).
 
 ---
 
@@ -168,7 +186,11 @@ Maximum |CPU - GPU| difference: 0
 
 MPI GPU Ring with CPU-based MPI (mpigpuring.c)
 ```yaml
-mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./mpigpuring
+[hostname:PID] Rank 0 bound to package[0][core:0-23]
+[hostname:PID] Rank 1 bound to package[1][core:24-47]
+[hostname:PID] Rank 2 bound to package[2][core:48-71]
+[hostname:PID] Rank 3 bound to package[3][core:72-95]
+
 Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0] | Recv[0] | Rank 2 BW (GB/s) | Send[0] | Recv[0] | Rank 3 BW (GB/s) | Send[0] | Recv[0] |
         67.11 |            11.76 |    1.00 |    4.00 |            11.82 |    2.00 |    1.00 |            11.82 |    3.00 |    2.00 |            11.76 |    4.00 |    3.00 |
        134.22 |            11.68 |    1.00 |    4.00 |            11.76 |    2.00 |    1.00 |            11.77 |    3.00 |    2.00 |            11.69 |    4.00 |    3.00 |
@@ -178,6 +200,24 @@ Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0
       2147.48 |            12.13 |    1.00 |    4.00 |            12.11 |    2.00 |    1.00 |            12.11 |    3.00 |    2.00 |            12.13 |    4.00 |    3.00 |
       4294.97 |            12.15 |    1.00 |    4.00 |            12.24 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
       8589.93 |            12.15 |    1.00 |    4.00 |            12.23 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
+```
+
+MPI GPU Ring with GPU-aware MPI (mpigpuawarering.c)
+```yaml
+[hostname:PID] Rank 0 bound to package[0][core:0-23]
+[hostname:PID] Rank 1 bound to package[1][core:24-47]
+[hostname:PID] Rank 2 bound to package[2][core:48-71]
+[hostname:PID] Rank 3 bound to package[3][core:72-95]
+
+Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0] | Recv[0] | Rank 2 BW (GB/s) | Send[0] | Recv[0] | Rank 3 BW (GB/s) | Send[0] | Recv[0] |
+        67.11 |            37.46 |    1.00 |    4.00 |            37.47 |    2.00 |    1.00 |            37.49 |    3.00 |    2.00 |            37.49 |    4.00 |    3.00 |
+       134.22 |           158.22 |    1.00 |    4.00 |           158.03 |    2.00 |    1.00 |           158.43 |    3.00 |    2.00 |           158.46 |    4.00 |    3.00 |
+       268.44 |           170.04 |    1.00 |    4.00 |           170.04 |    2.00 |    1.00 |           170.23 |    3.00 |    2.00 |           170.24 |    4.00 |    3.00 |
+       536.87 |           169.34 |    1.00 |    4.00 |           168.98 |    2.00 |    1.00 |           169.48 |    3.00 |    2.00 |           169.49 |    4.00 |    3.00 |
+      1073.74 |           169.64 |    1.00 |    4.00 |           169.61 |    2.00 |    1.00 |           169.83 |    3.00 |    2.00 |           169.83 |    4.00 |    3.00 |
+      2147.48 |           170.03 |    1.00 |    4.00 |           170.00 |    2.00 |    1.00 |           169.71 |    3.00 |    2.00 |           169.71 |    4.00 |    3.00 |
+      4294.97 |           171.27 |    1.00 |    4.00 |           171.24 |    2.00 |    1.00 |           171.04 |    3.00 |    2.00 |           171.04 |    4.00 |    3.00 |
+      8589.93 |           171.50 |    1.00 |    4.00 |           171.44 |    2.00 |    1.00 |           171.25 |    3.00 |    2.00 |           171.25 |    4.00 |    3.00 |
 ```
 
 ---
@@ -195,7 +235,7 @@ doxygen Doxyfile
 ```
 
 This documentation includes:
-- Function descriptions
+- Function-level documentation
 - GPU kernel explanations
 - Example outputs
 - Compilation and runtime notes
@@ -214,7 +254,7 @@ It depends on the following third-party software:
 - **OpenMPI**
 
 These components are licensed under their respective open-source licenses and
-are not covered by this project's Apache License 2.0. Users are responsible for
+are **not** covered by this project's Apache License 2.0. Users are responsible for
 complying with the license terms of each dependency.
 
 HIP, ROCm, and AMD are trademarks of Advanced Micro Devices, Inc.
