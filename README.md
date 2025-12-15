@@ -16,6 +16,20 @@ All example results were obtained on **1 node with 4 AMD MI300A APUs** with the 
 - openMPI 5.0.7-ucc1.4.4-ucx1.18.1   
 - OpenBLAS 0.3.20  
 
+The code should work on other ROCm-supported AMD GPUs, although performance and numerical results may vary.
+
+---
+
+## Requirements
+
+- AMD GPU supported by ROCm
+- ROCm (e.g. 7.1.1 compatible)
+- HIP and hipBLAS
+- BLAS library (e.g. OpenBLAS)
+- MPI library (e.g. OpenMPI) 
+- GNU Make
+- C++17-compatible compiler (e.g. `hipcc`)
+
 ---
 
 ## Build Instructions
@@ -28,7 +42,7 @@ make
 
 # Or build individually
 make build/gemm
-make build/vectorreduction```
+make build/vectorreduction
 ```
 
 This will create the binaries in the build/ directory.
@@ -52,6 +66,9 @@ After building, you can run the programs as follows:
 Each program prints:
 - Computation times on CPU and GPU
 - Validation results (maximum difference between CPU and GPU results)
+
+Program outputs shown below are also saved under the `output/` directory
+(e.g. `output/gemm_output.txt`).
 
 ---
 
@@ -82,7 +99,7 @@ Detailed API and workflow documentation is available as HTML:
 docs/html/index.html
 ```
 
-To generate it yourself:
+To generate it yourself (requires `doxygen` installed):
 ```bash
 doxygen Doxyfile
 ```
@@ -92,6 +109,25 @@ This documentation includes:
 - GPU kernel explanations
 - Example outputs
 - Compilation and runtime notes
+
+---
+
+## Third-Party Software and Trademarks
+
+This project is a research and demonstration code showcasing GPU-accelerated
+computations using the AMD ROCm platform.
+
+It depends on the following third-party software:
+
+- **HIP** and **hipBLAS** (AMD ROCm)
+- **OpenBLAS**
+- **OpenMPI**
+
+These components are licensed under their respective open-source licenses and
+are not covered by this project's Apache License 2.0. Users are responsible for
+complying with the license terms of each dependency.
+
+HIP, ROCm, and AMD are trademarks of Advanced Micro Devices, Inc.
 
 ---
 
