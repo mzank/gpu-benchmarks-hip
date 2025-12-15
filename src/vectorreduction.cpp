@@ -8,7 +8,7 @@
  * ==================== Results ====================
  * CPU sum: 1.07374e+09, time: 43.1988 ms
  * GPU sum: 1.07374e+09, time: 4.56007 ms
- * Maximum |CPU - GPU| difference: 0
+ * |sum_CPU - sum_GPU| = 0
  * \endcode
  *
  * Hardware and Software Environment:
