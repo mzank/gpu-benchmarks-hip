@@ -195,11 +195,11 @@ int main()
     // Print results
     // -------------------------
     std::cout << "==================== Results ====================\n";
-    std::cout << "CPU sum: " << cpu_sum
+    std::cout << "sum_CPU: " << cpu_sum
               << ", time: " << cpu_time_ms << " ms\n";
-    std::cout << "GPU sum: " << gpu_sum
+    std::cout << "sum_GPU: " << gpu_sum
               << ", time: " << gpu_time_ms << " ms\n";
-    std::cout << "Maximum |CPU - GPU| difference: " << max_abs_diff << "\n";
+    std::cout << "|sum_CPU - sum_GPU| = " << max_abs_diff << "\n";
 
     // -------------------------
     // Cleanup GPU resources
