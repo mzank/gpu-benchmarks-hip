@@ -185,11 +185,11 @@ $(function() {
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="comment">// Print results</span></div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="comment">// -------------------------</span></div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;==================== Results ====================\n&quot;</span>;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;CPU sum: &quot;</span> &lt;&lt; cpu_sum</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_CPU: &quot;</span> &lt;&lt; cpu_sum</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; cpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;GPU sum: &quot;</span> &lt;&lt; gpu_sum</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_GPU: &quot;</span> &lt;&lt; gpu_sum</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; gpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;Maximum |CPU - GPU| difference: &quot;</span> &lt;&lt; max_abs_diff &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    std::cout &lt;&lt; <span class="stringliteral">&quot;|sum_CPU - sum_GPU| = &quot;</span> &lt;&lt; max_abs_diff &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="comment">// -------------------------</span></div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="comment">// Cleanup GPU resources</span></div>
