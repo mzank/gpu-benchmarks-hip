@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     /* ------------------------- */
     /* MPI info                  */
     /* ------------------------- */
-    int world_rank, world_size;
+    int world_rank = 0, world_size = 0;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
                         0, MPI_INFO_NULL,
                         &host_comm);
 
-    int host_rank;
+    int host_rank = 0;
     MPI_Comm_rank(host_comm, &host_rank);
 
     /* ------------------------- */
