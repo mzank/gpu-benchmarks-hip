@@ -6,12 +6,14 @@ CFLAGS = -std=c11 -O3
 LDFLAGS_GEMM = -lhipblas -lopenblas -ltbb
 LDFLAGS_VEC  = -ltbb
 LDFLAGS_MPI  = -lmpi -lnuma
+LDFLAGS_RCCL  = -lrccl -lmpi -lnuma
 
 # Source files
 SRC_GEMM = src/gemm.cpp
 SRC_VEC  = src/vectorreduction.cpp
 SRC_MPI  = src/mpigpuring.c
 SRC_MPI_AWARE = src/mpigpuawarering.c
+SRC_RCCL = src/rcclring.c
 
 # Output binaries
 BUILD_DIR = build
@@ -19,9 +21,10 @@ GEMM_BIN = $(BUILD_DIR)/gemm
 VEC_BIN  = $(BUILD_DIR)/vectorreduction
 MPI_BIN  = $(BUILD_DIR)/mpigpuring
 MPI_AWARE_BIN = $(BUILD_DIR)/mpigpuawarering
+RCCL_BIN = $(BUILD_DIR)/rcclring
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
@@ -38,6 +41,10 @@ $(MPI_BIN): $(SRC_MPI)
 # Build MPI GPU Ring with GPU-aware MPI
 $(MPI_AWARE_BIN): $(SRC_MPI_AWARE)
 	$(CXX) $(CFLAGS) $^ $(LDFLAGS_MPI) -o $@
+
+# Build RCCL GPU Ring
+$(RCCL_BIN): $(SRC_RCCL)
+	$(CXX) $(CFLAGS) $^ $(LDFLAGS_RCCL) -o $@
 
 # Create build directory
 $(BUILD_DIR):
