@@ -179,9 +179,9 @@ Maximum |C_cpu - C_gpu| = 2.30102e-10
 Vector Reduction (vectorreduction.cpp)
 ```yaml
 ==================== Results ====================
-CPU sum: 1.07374e+09, time: 43.1988 ms
-GPU sum: 1.07374e+09, time: 4.56007 ms
-Maximum |CPU - GPU| difference: 0
+sum_CPU: 1.07374e+09, time: 49.8159 ms
+sum_GPU: 1.07374e+09, time: 4.55739 ms
+|sum_CPU - sum_GPU| = 0
 ```
 
 MPI GPU Ring with CPU-based MPI (mpigpuring.c)

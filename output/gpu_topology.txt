@@ -34,3 +34,4 @@ GPU[2]		: (Topology) Numa Affinity: 2
 GPU[3]		: (Topology) Numa Node: 3
 GPU[3]		: (Topology) Numa Affinity: 3
 ================================== End of ROCm SMI Log ===================================
+
