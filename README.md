@@ -99,7 +99,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 ## Requirements
 
 - AMD GPU supported by ROCm
-- ROCm (e.g. 7.1.1 compatible)
+- ROCm (e.g. 7.1.1)
 - HIP and hipBLAS
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
