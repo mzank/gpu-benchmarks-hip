@@ -141,7 +141,7 @@ $(function() {
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">/* ------------------------- */</span></div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="comment">/* MPI info                  */</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="comment">/* ------------------------- */</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">int</span> world_rank, world_size;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">int</span> world_rank = 0, world_size = 0;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    MPI_Comm_rank(MPI_COMM_WORLD, &amp;world_rank);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    MPI_Comm_size(MPI_COMM_WORLD, &amp;world_size);</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
@@ -154,7 +154,7 @@ $(function() {
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                        0, MPI_INFO_NULL,</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                        &amp;host_comm);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">int</span> host_rank;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">int</span> host_rank = 0;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    MPI_Comm_rank(host_comm, &amp;host_rank);</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">/* ------------------------- */</span></div>

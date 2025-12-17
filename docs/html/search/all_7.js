@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vectorreduction_2ecpp_10',['vectorreduction.cpp',['../vectorreduction_8cpp.html',1,'']]]
+  ['threads_5fper_5fblock_10',['THREADS_PER_BLOCK',['../vectorreduction_8cpp.html#ac3cf880d303b0479288945e79a242f06',1,'vectorreduction.cpp']]]
 ];
