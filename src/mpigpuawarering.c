@@ -37,8 +37,8 @@
  * - ROCm 7.1.1
  * - openMPI 5.0.7-ucc1.4.4-ucx1.18.1 (GPU-aware)
  *
- * Author: Marco Zank
- * Date: 2025-12-15
+ * @author Marco Zank
+ * @date 2025-12-15
  */
 
 #ifdef USE_NUMA

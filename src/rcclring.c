@@ -38,8 +38,8 @@
  * - openMPI 5.0.7-ucc1.4.4-ucx1.18.1
  * - RCCL 2.27.7
  *
- * Author: Marco Zank
- * Date: 2025-12-16
+ * @author Marco Zank
+ * @date 2025-12-16
  */
 
 #ifdef USE_NUMA
