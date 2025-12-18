@@ -13,7 +13,6 @@
  *
  * Hardware and Software Environment:
  * - ROCm 7.1.1
- * - OpenBLAS 0.3.20
  *
  * This example initializes a large vector of doubles, computes its sum
  * on the CPU using parallel STL algorithms, and on the GPU using a
