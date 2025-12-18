@@ -161,6 +161,7 @@ int main()
         0, 0,
         d_data, d_partial, ARRAY_SIZE);
 
+    HIP_CHECK(hipGetLastError());
     HIP_CHECK(hipDeviceSynchronize());
 
     size_t s = blocks;
