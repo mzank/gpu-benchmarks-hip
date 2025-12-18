@@ -175,6 +175,7 @@ int main()
             0, 0,
             d_partial, d_partial, s);
 
+        HIP_CHECK(hipGetLastError());
         HIP_CHECK(hipDeviceSynchronize());
         s = next_blocks;
     }
