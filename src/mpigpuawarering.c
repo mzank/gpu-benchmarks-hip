@@ -263,5 +263,5 @@ int main(int argc, char *argv[])
 
     MPI_Comm_free(&host_comm);
     MPI_Finalize();
-    return 0;
+    return EXIT_SUCCESS;
 }

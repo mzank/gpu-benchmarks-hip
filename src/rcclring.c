@@ -296,5 +296,5 @@ int main(int argc, char *argv[])
     HIP_CHECK(hipStreamDestroy(stream));
 
     MPI_Finalize();
-    return 0;
+    return EXIT_SUCCESS;
 }

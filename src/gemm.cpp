@@ -258,5 +258,5 @@ int main() {
     std::cout << "GPU hipBLAS DGEMM time: " << gpu_time_ms << " ms\n";
     std::cout << "Maximum |C_cpu - C_gpu| = " << max_abs_diff << "\n";
 
-    return 0;
+    return EXIT_SUCCESS;
 }

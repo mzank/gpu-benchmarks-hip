@@ -208,5 +208,5 @@ int main()
     HIP_CHECK(hipFree(d_data));
     HIP_CHECK(hipFree(d_partial));
 
-    return 0;
+    return EXIT_SUCCESS;
 }
