@@ -1,0 +1,3 @@
+GPU config: 14592 blocks x 256 threads
+GPU result: -0.00378359 in 0.0204081 s
+CPU result: -0.00378631 in 0.683242 s

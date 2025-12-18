@@ -7,6 +7,7 @@ LDFLAGS_GEMM = -lhipblas -lopenblas -ltbb
 LDFLAGS_VEC  = -ltbb
 LDFLAGS_MPI  = -lmpi -lnuma
 LDFLAGS_RCCL  = -lrccl -lmpi -lnuma
+LDFLAGS_MC   = -lhiprand -ltbb -lm
 
 # Source files
 SRC_GEMM = src/gemm.cpp
@@ -14,6 +15,7 @@ SRC_VEC  = src/vectorreduction.cpp
 SRC_MPI  = src/mpigpuring.c
 SRC_MPI_AWARE = src/mpigpuawarering.c
 SRC_RCCL = src/rcclring.c
+SRC_MC   = src/montecarlointegration.cpp
 
 # Output binaries
 BUILD_DIR = build
@@ -22,9 +24,10 @@ VEC_BIN  = $(BUILD_DIR)/vectorreduction
 MPI_BIN  = $(BUILD_DIR)/mpigpuring
 MPI_AWARE_BIN = $(BUILD_DIR)/mpigpuawarering
 RCCL_BIN = $(BUILD_DIR)/rcclring
+MC_BIN   = $(BUILD_DIR)/montecarlointegration
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
@@ -45,6 +48,10 @@ $(MPI_AWARE_BIN): $(SRC_MPI_AWARE)
 # Build RCCL GPU Ring
 $(RCCL_BIN): $(SRC_RCCL)
 	$(CXX) $(CFLAGS) $^ $(LDFLAGS_RCCL) -o $@
+
+# Build Monte Carlo Integration (CPU + GPU)
+$(MC_BIN): $(SRC_MC)
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_MC) -o $@
 
 # Create build directory
 $(BUILD_DIR):

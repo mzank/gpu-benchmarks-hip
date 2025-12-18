@@ -8,6 +8,7 @@ It includes the following examples:
 3. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
 4. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
 5. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
+6. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
 
 ---
 
@@ -102,7 +103,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 - AMD GPU supported by ROCm
 - ROCm (e.g. 7.1.1)
-- HIP and hipBLAS
+- HIP, hipBLAS and hipRAND
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
 - RCCL (e.g. 2.27.7)
@@ -128,6 +129,7 @@ make build/vectorreduction
 make build/mpigpuring
 make build/mpigpuawarering
 make build/rcclring
+make build/montecarlointegration
 ```
 
 All binaries are generated in the `build/` directory.
@@ -171,6 +173,11 @@ export HSA_NO_SCRATCH_RECLAIM=1  # keeps GPU scratch memory allocated between ke
 mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/rcclring
 ```
 > **Note:** This example uses RCCL to test collective communication patterns but runs entirely with CPU-based MPI. Setting `HSA_NO_SCRATCH_RECLAIM=1` ensures that GPU scratch (private) memory remains allocated across kernel launches, which improves performance stability and prevents memory allocation overhead in multi-GPU workloads.
+
+### Run Monte Carlo Integration example
+```bash
+./build/montecarlointegration
+```
 
 Program outputs shown below are also saved under the `output/` directory
 (e.g. `output/gemm_output.txt`, `output/numa_info.txt`, `output/gpu_topology.txt`).
@@ -249,6 +256,13 @@ Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0
       8589.93 |           171.53 |    1.00 |    4.00 |           171.23 |    2.00 |    1.00 |           171.01 |    3.00 |    2.00 |           171.01 |    4.00 |    3.00 |
 ```
 
+Monte Carlo Integration (montecarlointegration.cpp)
+```yaml
+GPU config: 14592 blocks x 256 threads
+GPU result: -0.00378359 in 0.0204081 s
+CPU result: -0.00378631 in 0.683242 s
+```
+
 ---
 
 ## Doxygen Documentation
@@ -278,7 +292,7 @@ computations using the AMD ROCm platform.
 
 It depends on the following third-party software:
 
-- **HIP** and **hipBLAS** (AMD ROCm)
+- **HIP**, **hipBLAS** and **hipRAND** (AMD ROCm)
 - **OpenBLAS**
 - **OpenMPI**
 
