@@ -14,7 +14,7 @@ It includes the following examples:
 
 ## Hardware and Software Environment
 
-All example results were obtained on **1 node with 4 AMD MI300A APUs**.
+All example results were obtained on a single node with **4 AMD MI300A APUs**, where the examples without MPI utilized only 1 AMD MI300A APU.
 
 > **Note:** Each MI300A integrates Zen 4 CPU cores and a CDNA3 GPU sharing HBM memory. NUMA locality therefore plays a critical role in both CPU and GPU performance.
 
