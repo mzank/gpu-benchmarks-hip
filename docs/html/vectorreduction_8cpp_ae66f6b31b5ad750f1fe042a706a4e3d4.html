@@ -159,53 +159,55 @@ $(function() {
 <div class="line"><span class="lineno">  161</span>        0, 0,</div>
 <div class="line"><span class="lineno">  162</span>        d_data, d_partial, <a class="code hl_variable" href="vectorreduction_8cpp_ab6ae7bddab4c5914d0db434cd17904d4.html#ab6ae7bddab4c5914d0db434cd17904d4">ARRAY_SIZE</a>);</div>
 <div class="line"><span class="lineno">  163</span> </div>
-<div class="line"><span class="lineno">  164</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipDeviceSynchronize());</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>    <span class="keywordtype">size_t</span> s = blocks;</div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">while</span> (s &gt; 1) {</div>
-<div class="line"><span class="lineno">  168</span>        <span class="keyword">const</span> <span class="keywordtype">size_t</span> next_blocks = (s + <a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a> * 2 - 1) / (<a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a> * 2);</div>
-<div class="line"><span class="lineno">  169</span> </div>
-<div class="line"><span class="lineno">  170</span>        hipLaunchKernelGGL(</div>
-<div class="line"><span class="lineno">  171</span>            <a class="code hl_function" href="vectorreduction_8cpp_a881c76f463103bde99ace8d30fe201f3.html#a881c76f463103bde99ace8d30fe201f3">block_reduce</a>,</div>
-<div class="line"><span class="lineno">  172</span>            dim3(<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(next_blocks)),</div>
-<div class="line"><span class="lineno">  173</span>            dim3(<a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a>),</div>
-<div class="line"><span class="lineno">  174</span>            0, 0,</div>
-<div class="line"><span class="lineno">  175</span>            d_partial, d_partial, s);</div>
-<div class="line"><span class="lineno">  176</span> </div>
-<div class="line"><span class="lineno">  177</span>        <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipDeviceSynchronize());</div>
-<div class="line"><span class="lineno">  178</span>        s = next_blocks;</div>
-<div class="line"><span class="lineno">  179</span>    }</div>
-<div class="line"><span class="lineno">  180</span> </div>
-<div class="line"><span class="lineno">  181</span>    <span class="keywordtype">double</span> gpu_sum = 0.0;</div>
-<div class="line"><span class="lineno">  182</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipMemcpy(&amp;gpu_sum, d_partial, <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>), hipMemcpyDeviceToHost));</div>
-<div class="line"><span class="lineno">  183</span> </div>
-<div class="line"><span class="lineno">  184</span>    <span class="keyword">auto</span> gpu_end = std::chrono::high_resolution_clock::now();</div>
-<div class="line"><span class="lineno">  185</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> gpu_time_ms =</div>
-<div class="line"><span class="lineno">  186</span>        std::chrono::duration&lt;double, std::milli&gt;(gpu_end - gpu_start).count();</div>
-<div class="line"><span class="lineno">  187</span> </div>
-<div class="line"><span class="lineno">  188</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  189</span>    <span class="comment">// Validation</span></div>
+<div class="line"><span class="lineno">  164</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipGetLastError());</div>
+<div class="line"><span class="lineno">  165</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipDeviceSynchronize());</div>
+<div class="line"><span class="lineno">  166</span> </div>
+<div class="line"><span class="lineno">  167</span>    <span class="keywordtype">size_t</span> s = blocks;</div>
+<div class="line"><span class="lineno">  168</span>    <span class="keywordflow">while</span> (s &gt; 1) {</div>
+<div class="line"><span class="lineno">  169</span>        <span class="keyword">const</span> <span class="keywordtype">size_t</span> next_blocks = (s + <a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a> * 2 - 1) / (<a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a> * 2);</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>        hipLaunchKernelGGL(</div>
+<div class="line"><span class="lineno">  172</span>            <a class="code hl_function" href="vectorreduction_8cpp_a881c76f463103bde99ace8d30fe201f3.html#a881c76f463103bde99ace8d30fe201f3">block_reduce</a>,</div>
+<div class="line"><span class="lineno">  173</span>            dim3(<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(next_blocks)),</div>
+<div class="line"><span class="lineno">  174</span>            dim3(<a class="code hl_variable" href="vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06">THREADS_PER_BLOCK</a>),</div>
+<div class="line"><span class="lineno">  175</span>            0, 0,</div>
+<div class="line"><span class="lineno">  176</span>            d_partial, d_partial, s);</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>        <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipGetLastError());</div>
+<div class="line"><span class="lineno">  179</span>        <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipDeviceSynchronize());</div>
+<div class="line"><span class="lineno">  180</span>        s = next_blocks;</div>
+<div class="line"><span class="lineno">  181</span>    }</div>
+<div class="line"><span class="lineno">  182</span> </div>
+<div class="line"><span class="lineno">  183</span>    <span class="keywordtype">double</span> gpu_sum = 0.0;</div>
+<div class="line"><span class="lineno">  184</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipMemcpy(&amp;gpu_sum, d_partial, <span class="keyword">sizeof</span>(<span class="keywordtype">double</span>), hipMemcpyDeviceToHost));</div>
+<div class="line"><span class="lineno">  185</span> </div>
+<div class="line"><span class="lineno">  186</span>    <span class="keyword">auto</span> gpu_end = std::chrono::high_resolution_clock::now();</div>
+<div class="line"><span class="lineno">  187</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> gpu_time_ms =</div>
+<div class="line"><span class="lineno">  188</span>        std::chrono::duration&lt;double, std::milli&gt;(gpu_end - gpu_start).count();</div>
+<div class="line"><span class="lineno">  189</span> </div>
 <div class="line"><span class="lineno">  190</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  191</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> max_abs_diff = std::abs(cpu_sum - gpu_sum);</div>
-<div class="line"><span class="lineno">  192</span> </div>
-<div class="line"><span class="lineno">  193</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  194</span>    <span class="comment">// Print results</span></div>
+<div class="line"><span class="lineno">  191</span>    <span class="comment">// Validation</span></div>
+<div class="line"><span class="lineno">  192</span>    <span class="comment">// -------------------------</span></div>
+<div class="line"><span class="lineno">  193</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> max_abs_diff = std::abs(cpu_sum - gpu_sum);</div>
+<div class="line"><span class="lineno">  194</span> </div>
 <div class="line"><span class="lineno">  195</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  196</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;==================== Results ====================\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  197</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_CPU: &quot;</span> &lt;&lt; cpu_sum</div>
-<div class="line"><span class="lineno">  198</span>              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; cpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  199</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_GPU: &quot;</span> &lt;&lt; gpu_sum</div>
-<div class="line"><span class="lineno">  200</span>              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; gpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  201</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;|sum_CPU - sum_GPU| = &quot;</span> &lt;&lt; max_abs_diff &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><span class="lineno">  202</span> </div>
-<div class="line"><span class="lineno">  203</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  204</span>    <span class="comment">// Cleanup GPU resources</span></div>
+<div class="line"><span class="lineno">  196</span>    <span class="comment">// Print results</span></div>
+<div class="line"><span class="lineno">  197</span>    <span class="comment">// -------------------------</span></div>
+<div class="line"><span class="lineno">  198</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;==================== Results ====================\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  199</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_CPU: &quot;</span> &lt;&lt; cpu_sum</div>
+<div class="line"><span class="lineno">  200</span>              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; cpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  201</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;sum_GPU: &quot;</span> &lt;&lt; gpu_sum</div>
+<div class="line"><span class="lineno">  202</span>              &lt;&lt; <span class="stringliteral">&quot;, time: &quot;</span> &lt;&lt; gpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  203</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;|sum_CPU - sum_GPU| = &quot;</span> &lt;&lt; max_abs_diff &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><span class="lineno">  204</span> </div>
 <div class="line"><span class="lineno">  205</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  206</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipFree(d_data));</div>
-<div class="line"><span class="lineno">  207</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipFree(d_partial));</div>
-<div class="line"><span class="lineno">  208</span> </div>
-<div class="line"><span class="lineno">  209</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  210</span>}</div>
+<div class="line"><span class="lineno">  206</span>    <span class="comment">// Cleanup GPU resources</span></div>
+<div class="line"><span class="lineno">  207</span>    <span class="comment">// -------------------------</span></div>
+<div class="line"><span class="lineno">  208</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipFree(d_data));</div>
+<div class="line"><span class="lineno">  209</span>    <a class="code hl_define" href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipFree(d_partial));</div>
+<div class="line"><span class="lineno">  210</span> </div>
+<div class="line"><span class="lineno">  211</span>    <span class="keywordflow">return</span> EXIT_SUCCESS;</div>
+<div class="line"><span class="lineno">  212</span>}</div>
 <div class="ttc" id="avectorreduction_8cpp_a881c76f463103bde99ace8d30fe201f3_html_a881c76f463103bde99ace8d30fe201f3"><div class="ttname"><a href="vectorreduction_8cpp_a881c76f463103bde99ace8d30fe201f3.html#a881c76f463103bde99ace8d30fe201f3">block_reduce</a></div><div class="ttdeci">static __global__ void block_reduce(const double *input, double *output, size_t size)</div><div class="ttdoc">GPU kernel performing block-level reduction.</div><div class="ttdef"><b>Definition</b> <a href="vectorreduction_8cpp_source.html#l00080">vectorreduction.cpp:80</a></div></div>
 <div class="ttc" id="avectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9_html_aaf41965393ffaedeec1441c5bc1c04e9"><div class="ttname"><a href="vectorreduction_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a></div><div class="ttdeci">#define HIP_CHECK(status)</div><div class="ttdoc">Macro to check HIP runtime API errors.</div><div class="ttdef"><b>Definition</b> <a href="vectorreduction_8cpp_source.html#l00050">vectorreduction.cpp:50</a></div></div>
 <div class="ttc" id="avectorreduction_8cpp_ab6ae7bddab4c5914d0db434cd17904d4_html_ab6ae7bddab4c5914d0db434cd17904d4"><div class="ttname"><a href="vectorreduction_8cpp_ab6ae7bddab4c5914d0db434cd17904d4.html#ab6ae7bddab4c5914d0db434cd17904d4">ARRAY_SIZE</a></div><div class="ttdeci">constexpr size_t ARRAY_SIZE</div><div class="ttdoc">Size of the vector to reduce.</div><div class="ttdef"><b>Definition</b> <a href="vectorreduction_8cpp_source.html#l00063">vectorreduction.cpp:63</a></div></div>

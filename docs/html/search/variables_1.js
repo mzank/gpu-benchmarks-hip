@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['threads_5fper_5fblock_0',['THREADS_PER_BLOCK',['../vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06',1,'vectorreduction.cpp']]]
+  ['cpu_5fsamples_5fper_5fiter_0',['CPU_SAMPLES_PER_ITER',['../montecarlointegration_8cpp_a83ef48762692492d5c2791096de21128.html#a83ef48762692492d5c2791096de21128',1,'montecarlointegration.cpp']]]
 ];

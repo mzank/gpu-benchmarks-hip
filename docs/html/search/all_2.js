@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dgemm_5f_0',['dgemm_',['../gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4',1,'gemm.cpp']]]
+  ['cpu_5fsamples_5fper_5fiter_0',['CPU_SAMPLES_PER_ITER',['../montecarlointegration_8cpp_a83ef48762692492d5c2791096de21128.html#a83ef48762692492d5c2791096de21128',1,'montecarlointegration.cpp']]]
 ];

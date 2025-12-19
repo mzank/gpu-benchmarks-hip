@@ -135,17 +135,17 @@ $(function() {
 <div class="line"><span class="lineno">  121</span>    <span class="comment">// -------------------------</span></div>
 <div class="line"><span class="lineno">  122</span>    <span class="comment">// Matrix size and memory</span></div>
 <div class="line"><span class="lineno">  123</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  127</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> N = 32768;</div>
+<div class="line"><span class="lineno">  127</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> = 32768;</div>
 <div class="line"><span class="lineno">  128</span> </div>
-<div class="line"><span class="lineno">  132</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> MATRIX_BYTES = N * N * <span class="keyword">sizeof</span>(double);</div>
+<div class="line"><span class="lineno">  132</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> MATRIX_BYTES = <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <span class="keyword">sizeof</span>(double);</div>
 <div class="line"><span class="lineno">  133</span> </div>
 <div class="line"><span class="lineno">  134</span>    <span class="comment">// -------------------------</span></div>
 <div class="line"><span class="lineno">  135</span>    <span class="comment">// Host matrices</span></div>
 <div class="line"><span class="lineno">  136</span>    <span class="comment">// -------------------------</span></div>
-<div class="line"><span class="lineno">  137</span>    std::vector&lt;double&gt; h_matrixA(N * N);         </div>
-<div class="line"><span class="lineno">  138</span>    std::vector&lt;double&gt; h_matrixB(N * N);         </div>
-<div class="line"><span class="lineno">  139</span>    std::vector&lt;double&gt; h_matrixC_cpu(N * N, 0.0); </div>
-<div class="line"><span class="lineno">  140</span>    std::vector&lt;double&gt; h_matrixC_gpu(N * N, 0.0); </div>
+<div class="line"><span class="lineno">  137</span>    std::vector&lt;double&gt; h_matrixA(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>);         </div>
+<div class="line"><span class="lineno">  138</span>    std::vector&lt;double&gt; h_matrixB(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>);         </div>
+<div class="line"><span class="lineno">  139</span>    std::vector&lt;double&gt; h_matrixC_cpu(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, 0.0); </div>
+<div class="line"><span class="lineno">  140</span>    std::vector&lt;double&gt; h_matrixC_gpu(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> * <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, 0.0); </div>
 <div class="line"><span class="lineno">  142</span>    <span class="comment">// -------------------------</span></div>
 <div class="line"><span class="lineno">  143</span>    <span class="comment">// Initialize matrices with random values in parallel</span></div>
 <div class="line"><span class="lineno">  144</span>    <span class="comment">// -------------------------</span></div>
@@ -167,12 +167,12 @@ $(function() {
 <div class="line"><span class="lineno">  166</span>    <span class="comment">// CPU DGEMM (using BLAS)</span></div>
 <div class="line"><span class="lineno">  167</span>    <span class="comment">// ============================================================</span></div>
 <div class="line"><span class="lineno">  174</span>    <span class="keyword">auto</span> cpu_start = std::chrono::high_resolution_clock::now();</div>
-<div class="line"><span class="lineno">  175</span>    <a class="code hl_function" href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_</a>(<span class="stringliteral">&quot;N&quot;</span>, <span class="stringliteral">&quot;N&quot;</span>, &amp;N, &amp;N, &amp;N,</div>
+<div class="line"><span class="lineno">  175</span>    <a class="code hl_function" href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_</a>(<span class="stringliteral">&quot;N&quot;</span>, <span class="stringliteral">&quot;N&quot;</span>, &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
 <div class="line"><span class="lineno">  176</span>           &amp;alpha,</div>
-<div class="line"><span class="lineno">  177</span>           h_matrixA.data(), &amp;N,</div>
-<div class="line"><span class="lineno">  178</span>           h_matrixB.data(), &amp;N,</div>
+<div class="line"><span class="lineno">  177</span>           h_matrixA.data(), &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
+<div class="line"><span class="lineno">  178</span>           h_matrixB.data(), &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
 <div class="line"><span class="lineno">  179</span>           &amp;beta,</div>
-<div class="line"><span class="lineno">  180</span>           h_matrixC_cpu.data(), &amp;N);</div>
+<div class="line"><span class="lineno">  180</span>           h_matrixC_cpu.data(), &amp;<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>);</div>
 <div class="line"><span class="lineno">  181</span>    <span class="keyword">auto</span> cpu_end = std::chrono::high_resolution_clock::now();</div>
 <div class="line"><span class="lineno">  182</span>    <span class="keywordtype">double</span> cpu_time_ms = std::chrono::duration&lt;double, std::milli&gt;(cpu_end - cpu_start).count();</div>
 <div class="line"><span class="lineno">  183</span> </div>
@@ -199,12 +199,12 @@ $(function() {
 <div class="line"><span class="lineno">  214</span> </div>
 <div class="line"><span class="lineno">  215</span>    <a class="code hl_define" href="gemm_8cpp_a2775524fd26fbcc4fcb729b926e089af.html#a2775524fd26fbcc4fcb729b926e089af">HIPBLAS_CHECK</a>(hipblasDgemm(handle,</div>
 <div class="line"><span class="lineno">  216</span>                               HIPBLAS_OP_N, HIPBLAS_OP_N,</div>
-<div class="line"><span class="lineno">  217</span>                               N, N, N,</div>
+<div class="line"><span class="lineno">  217</span>                               <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>, <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
 <div class="line"><span class="lineno">  218</span>                               &amp;alpha,</div>
-<div class="line"><span class="lineno">  219</span>                               d_matrixA, N,</div>
-<div class="line"><span class="lineno">  220</span>                               d_matrixB, N,</div>
+<div class="line"><span class="lineno">  219</span>                               d_matrixA, <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
+<div class="line"><span class="lineno">  220</span>                               d_matrixB, <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>,</div>
 <div class="line"><span class="lineno">  221</span>                               &amp;beta,</div>
-<div class="line"><span class="lineno">  222</span>                               d_matrixC, N));</div>
+<div class="line"><span class="lineno">  222</span>                               d_matrixC, <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>));</div>
 <div class="line"><span class="lineno">  223</span> </div>
 <div class="line"><span class="lineno">  224</span>    <a class="code hl_define" href="gemm_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a>(hipDeviceSynchronize());</div>
 <div class="line"><span class="lineno">  225</span>    <span class="keyword">auto</span> gpu_end = std::chrono::high_resolution_clock::now();</div>
@@ -238,13 +238,14 @@ $(function() {
 <div class="line"><span class="lineno">  258</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;GPU hipBLAS DGEMM time: &quot;</span> &lt;&lt; gpu_time_ms &lt;&lt; <span class="stringliteral">&quot; ms\n&quot;</span>;</div>
 <div class="line"><span class="lineno">  259</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;Maximum |C_cpu - C_gpu| = &quot;</span> &lt;&lt; max_abs_diff &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line"><span class="lineno">  260</span> </div>
-<div class="line"><span class="lineno">  261</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  261</span>    <span class="keywordflow">return</span> EXIT_SUCCESS;</div>
 <div class="line"><span class="lineno">  262</span>}</div>
 <div class="ttc" id="agemm_8cpp_a2775524fd26fbcc4fcb729b926e089af_html_a2775524fd26fbcc4fcb729b926e089af"><div class="ttname"><a href="gemm_8cpp_a2775524fd26fbcc4fcb729b926e089af.html#a2775524fd26fbcc4fcb729b926e089af">HIPBLAS_CHECK</a></div><div class="ttdeci">#define HIPBLAS_CHECK(status)</div><div class="ttdoc">Macro to check hipBLAS API errors.</div><div class="ttdef"><b>Definition</b> <a href="gemm_8cpp_source.html#l00097">gemm.cpp:97</a></div></div>
 <div class="ttc" id="agemm_8cpp_aaf41965393ffaedeec1441c5bc1c04e9_html_aaf41965393ffaedeec1441c5bc1c04e9"><div class="ttname"><a href="gemm_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a></div><div class="ttdeci">#define HIP_CHECK(status)</div><div class="ttdoc">Macro to check HIP runtime API errors.</div><div class="ttdef"><b>Definition</b> <a href="gemm_8cpp_source.html#l00082">gemm.cpp:82</a></div></div>
 <div class="ttc" id="agemm_8cpp_ab7c07a53e19f291439911f7da41200f4_html_ab7c07a53e19f291439911f7da41200f4"><div class="ttname"><a href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_</a></div><div class="ttdeci">void dgemm_(const char *transa, const char *transb, const int *m, const int *n, const int *k, const double *alpha, const double *A, const int *lda, const double *B, const int *ldb, const double *beta, double *C, const int *ldc)</div><div class="ttdoc">External CPU BLAS DGEMM routine.</div></div>
+<div class="ttc" id="amontecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365_html_ade6c365880e00a7c1a8ea0dd9487d365"><div class="ttname"><a href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a></div><div class="ttdeci">constexpr std::size_t N</div><div class="ttdoc">Total number of Monte Carlo samples.</div><div class="ttdef"><b>Definition</b> <a href="montecarlointegration_8cpp_source.html#l00070">montecarlointegration.cpp:70</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_()</a>, <a class="el" href="gemm_8cpp_source.html#l00082">HIP_CHECK</a>, and <a class="el" href="gemm_8cpp_source.html#l00097">HIPBLAS_CHECK</a>.</p>
+<p class="reference">References <a class="el" href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_()</a>, <a class="el" href="gemm_8cpp_source.html#l00082">HIP_CHECK</a>, <a class="el" href="gemm_8cpp_source.html#l00097">HIPBLAS_CHECK</a>, and <a class="el" href="montecarlointegration_8cpp_source.html#l00070">N</a>.</p>
 
 </div>
 </div>
