@@ -192,6 +192,22 @@ mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/rcclring
 
 > **Note:** The three arguments specify the grid dimensions `(Nx Ny Nz)`. Large grids require significant GPU and host memory.
 
+#### FFTW Wisdom
+
+The 3D FFT Poisson solver uses **FFTW’s wisdom mechanism** to speed up CPU FFT planning:
+
+1. **First run**:  
+   If no wisdom file exists for the specified grid size, FFTW will measure plans. This can take several seconds to minutes depending on the grid.  
+2. **Wisdom file creation**:  
+After the first run, FFTW writes a wisdom file named: `fftpoisson3d_fftw_wisdom_Nx_Ny_Nz.dat`
+where `Nx`, `Ny`, `Nz` are the grid dimensions.
+3. **Subsequent runs**:  
+The program automatically loads the existing wisdom file, drastically reducing CPU FFT plan time.  
+
+> **Tip:** Wisdom files are grid-size specific. Changing any of `Nx`, `Ny`, or `Nz` will require generating a new wisdom file.
+
+---
+
 Program outputs shown below are also saved under the `output/` directory
 (e.g. `output/gemm_output.txt`, `output/numa_info.txt`, `output/gpu_topology.txt`).
 
