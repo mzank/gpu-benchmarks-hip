@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['threads_5fper_5fblock_0',['threads_per_block',['../montecarlointegration_8cpp_a0d5d8914d592815bea97ed141dfecf94.html#a0d5d8914d592815bea97ed141dfecf94',1,'THREADS_PER_BLOCK:&#160;montecarlointegration.cpp'],['../vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06',1,'THREADS_PER_BLOCK:&#160;vectorreduction.cpp']]]
+  ['n_0',['N',['../montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365',1,'montecarlointegration.cpp']]],
+  ['n_5fruns_1',['N_RUNS',['../fftpoisson3d_8cpp_a08837313dac9640e87d5c863bdda5d56.html#a08837313dac9640e87d5c863bdda5d56',1,'fftpoisson3d.cpp']]]
 ];

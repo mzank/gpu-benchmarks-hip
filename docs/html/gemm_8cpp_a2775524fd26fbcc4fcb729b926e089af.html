@@ -93,31 +93,32 @@ $(function() {
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HIPBLAS_CHECK</td>
+          <td class="memname">#<a class="el" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">define</a> HIPBLAS_CHECK</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">status</td><td>)</td>
+          <td class="paramname"><a class="el" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">status</a></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    {                                                             \</div>
-<div class="line">        hipblasStatus_t err = status;                             \</div>
-<div class="line">        if (err != HIPBLAS_STATUS_SUCCESS) {                      \</div>
-<div class="line">            std::cerr &lt;&lt; <span class="stringliteral">&quot;hipBLAS Error at line &quot;</span> &lt;&lt; __LINE__ &lt;&lt; std::endl; \</div>
-<div class="line">            std::exit(EXIT_FAILURE);                              \</div>
+<div class="line">        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">hipblasStatus_t</a> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">err</a> = <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">status</a>;                             <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">        if</a> (<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">err</a> != <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">HIPBLAS_STATUS_SUCCESS</a>) {                      \</div>
+<div class="line">            std::cerr &lt;&lt; <span class="stringliteral">&quot;hipBLAS Error at line &quot;</span> &lt;&lt; <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__LINE__</a> &lt;&lt; std::endl; \</div>
+<div class="line">            std::exit(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">EXIT_FAILURE</a>);                              \</div>
 <div class="line">        }                                                         \</div>
 <div class="line">    }</div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00198">fftpoisson3d.cpp:198</a></div></div>
 </div><!-- fragment -->
 <p>Macro to check hipBLAS API errors. </p>
 <p>Prints an error message and exits if the hipBLAS function fails. </p>
 
 <p class="definition">Definition at line <a class="el" href="gemm_8cpp_source.html#l00097">97</a> of file <a class="el" href="gemm_8cpp_source.html">gemm.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   98</span>    {                                                             \</div>
-<div class="line"><span class="lineno">   99</span>        hipblasStatus_t err = status;                             \</div>
-<div class="line"><span class="lineno">  100</span>        if (err != HIPBLAS_STATUS_SUCCESS) {                      \</div>
-<div class="line"><span class="lineno">  101</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;hipBLAS Error at line &quot;</span> &lt;&lt; __LINE__ &lt;&lt; std::endl; \</div>
-<div class="line"><span class="lineno">  102</span>            std::exit(EXIT_FAILURE);                              \</div>
+<div class="line"><span class="lineno">   99</span>        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">hipblasStatus_t</a> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">err</a> = <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">status</a>;                             <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><span class="lineno">  100</span><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">        if</a> (<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">err</a> != <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">HIPBLAS_STATUS_SUCCESS</a>) {                      \</div>
+<div class="line"><span class="lineno">  101</span>            std::cerr &lt;&lt; <span class="stringliteral">&quot;hipBLAS Error at line &quot;</span> &lt;&lt; <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__LINE__</a> &lt;&lt; std::endl; \</div>
+<div class="line"><span class="lineno">  102</span>            std::exit(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">EXIT_FAILURE</a>);                              \</div>
 <div class="line"><span class="lineno">  103</span>        }                                                         \</div>
 <div class="line"><span class="lineno">  104</span>    }</div>
 </div><!-- fragment -->

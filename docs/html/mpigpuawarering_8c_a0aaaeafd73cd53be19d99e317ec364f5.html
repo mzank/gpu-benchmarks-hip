@@ -89,28 +89,29 @@ $(function() {
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CHECK_ALLOC</td>
+          <td class="memname">#<a class="el" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">define</a> CHECK_ALLOC</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">ptr</td><td>)</td>
+          <td class="paramname"><a class="el" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ptr</a></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                               \</div>
-<div class="line">        if (!(ptr)) {                                                  \</div>
-<div class="line">            fprintf(stderr, <span class="stringliteral">&quot;Allocation failed at %s:%d\n&quot;</span>,            \</div>
-<div class="line">                    __FILE__, __LINE__);                               \</div>
-<div class="line">            MPI_Abort(MPI_COMM_WORLD, -1);                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                               <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">        if</a> (!(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ptr</a>)) {                                                  <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">            fprintf</a>(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">stderr</a>, <span class="stringliteral">&quot;Allocation failed at %s:%d\n&quot;</span>,            \</div>
+<div class="line">                    <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__FILE__</a>, <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__LINE__</a>);                               <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">            MPI_Abort</a>(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">MPI_COMM_WORLD</a>, -1);                             \</div>
 <div class="line">        }                                                              \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00198">fftpoisson3d.cpp:198</a></div></div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="mpigpuawarering_8c_source.html#l00082">82</a> of file <a class="el" href="mpigpuawarering_8c_source.html">mpigpuawarering.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>       {                                                               \</div>
-<div class="line"><span class="lineno">   84</span>        if (!(ptr)) {                                                  \</div>
-<div class="line"><span class="lineno">   85</span>            fprintf(stderr, <span class="stringliteral">&quot;Allocation failed at %s:%d\n&quot;</span>,            \</div>
-<div class="line"><span class="lineno">   86</span>                    __FILE__, __LINE__);                               \</div>
-<div class="line"><span class="lineno">   87</span>            MPI_Abort(MPI_COMM_WORLD, -1);                             \</div>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>       {                                                               <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><span class="lineno">   84</span><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">        if</a> (!(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ptr</a>)) {                                                  <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><span class="lineno">   85</span><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">            fprintf</a>(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">stderr</a>, <span class="stringliteral">&quot;Allocation failed at %s:%d\n&quot;</span>,            \</div>
+<div class="line"><span class="lineno">   86</span>                    <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__FILE__</a>, <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">__LINE__</a>);                               <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">\</a></div>
+<div class="line"><span class="lineno">   87</span><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">            MPI_Abort</a>(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">MPI_COMM_WORLD</a>, -1);                             \</div>
 <div class="line"><span class="lineno">   88</span>        }                                                              \</div>
 <div class="line"><span class="lineno">   89</span>    } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
