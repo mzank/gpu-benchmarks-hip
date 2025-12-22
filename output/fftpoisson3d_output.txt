@@ -1,0 +1,23 @@
+./fftpoisson3d 1024 1024 1024
+Running FFT Poisson solver with grid: 1024 x 1024 x 1024 = 1073741824
+GPU warm-up completed.
+GPU run 1 time = 0.330952 s
+GPU run 2 time = 0.334203 s
+GPU run 3 time = 0.334891 s
+GPU run 4 time = 0.337424 s
+GPU run 5 time = 0.33906 s
+CPU: No FFTW wisdom found, plans will be measured.
+CPU warm-up completed.
+CPU run 1 time = 11.9273 s
+CPU run 2 time = 12.7428 s
+CPU run 3 time = 13.5741 s
+CPU run 4 time = 14.2809 s
+CPU run 5 time = 13.7809 s
+FFTW wisdom saved to fftpoisson3d_fftw_wisdom_1024_1024_1024.dat.
+
+================== GPU vs CPU Comparison ==================
+Solver | Avg Time (s) |         L2 Error |        Max Error
+-------|--------------|------------------|-----------------
+GPU    |     0.335306 |     8.755893e-15 |     5.573320e-14
+CPU    |    13.261201 |     8.710855e-15 |     5.484502e-14
+===========================================================

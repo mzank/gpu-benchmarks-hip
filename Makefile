@@ -8,6 +8,7 @@ LDFLAGS_VEC  = -ltbb
 LDFLAGS_MPI  = -lmpi -lnuma
 LDFLAGS_RCCL  = -lrccl -lmpi -lnuma
 LDFLAGS_MC   = -lhiprand -ltbb -lm
+LDFLAGS_FFT  = -lhipfft -lfftw3 -lfftw3_threads -ltbb
 
 # Source files
 SRC_GEMM = src/gemm.cpp
@@ -16,6 +17,7 @@ SRC_MPI  = src/mpigpuring.c
 SRC_MPI_AWARE = src/mpigpuawarering.c
 SRC_RCCL = src/rcclring.c
 SRC_MC   = src/montecarlointegration.cpp
+SRC_FFT  = src/fftpoisson3d.cpp
 
 # Output binaries
 BUILD_DIR = build
@@ -25,9 +27,10 @@ MPI_BIN  = $(BUILD_DIR)/mpigpuring
 MPI_AWARE_BIN = $(BUILD_DIR)/mpigpuawarering
 RCCL_BIN = $(BUILD_DIR)/rcclring
 MC_BIN   = $(BUILD_DIR)/montecarlointegration
+FFT_BIN  = $(BUILD_DIR)/fftpoisson3d
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN) $(FFT_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
@@ -52,6 +55,10 @@ $(RCCL_BIN): $(SRC_RCCL)
 # Build Monte Carlo Integration (CPU + GPU)
 $(MC_BIN): $(SRC_MC)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_MC) -o $@
+
+# Build 3D FFT Poisson Solver (CPU + GPU)
+$(FFT_BIN): $(SRC_FFT)
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_FFT) -o $@
 
 # Create build directory
 $(BUILD_DIR):

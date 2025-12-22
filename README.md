@@ -9,6 +9,7 @@ It includes the following examples:
 4. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
 5. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
 6. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
+7. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
 
 ---
 
@@ -24,6 +25,9 @@ All example results were obtained on a single node with **4 AMD MI300A APUs**, w
 - OpenMPI 5.0.7 (with UCC 1.4.4, UCX 1.18.1, ROCm support)
 - OpenBLAS 0.3.20
 - RCCL 2.27.7
+- FFTW3 3.3.10 (with threads support)
+
+> **Note:** FFTW should be built with threads support (`--enable-threads`) for optimal CPU performance.
 
 The code should work on other ROCm-supported AMD GPUs, though performance and numerical results may vary.
 
@@ -103,10 +107,11 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 - AMD GPU supported by ROCm
 - ROCm (e.g. 7.1.1)
-- HIP, hipBLAS and hipRAND
+- HIP, hipBLAS, hipFFT and hipRAND
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
 - RCCL (e.g. 2.27.7)
+- FFTW3 (e.g. 3.3.10 with threads support)
 - GNU Make
 - C++17-compatible compiler for HIP/C++ sources (e.g. `hipcc`)
 - C11-compatible compiler for pure C MPI examples (e.g. `hipcc`)
@@ -130,6 +135,7 @@ make build/mpigpuring
 make build/mpigpuawarering
 make build/rcclring
 make build/montecarlointegration
+make build/fftpoisson3d
 ```
 
 All binaries are generated in the `build/` directory.
@@ -178,6 +184,13 @@ mpirun -np 4 --bind-to numa --map-by numa --report-bindings ./build/rcclring
 ```bash
 ./build/montecarlointegration
 ```
+
+### Run 3D FFT Poisson Solver
+```bash
+./build/fftpoisson3d 1024 1024 1024
+```
+
+> **Note:** The three arguments specify the grid dimensions `(Nx Ny Nz)`. Large grids require significant GPU and host memory.
 
 Program outputs shown below are also saved under the `output/` directory
 (e.g. `output/gemm_output.txt`, `output/numa_info.txt`, `output/gpu_topology.txt`).
@@ -263,6 +276,32 @@ GPU result: -0.00378359 in 0.0204081 s
 CPU result: -0.00378631 in 0.683242 s
 ```
 
+FFT Poisson Solver (fftpoisson3d.cpp)
+```yaml
+Running FFT Poisson solver with grid: 1024 x 1024 x 1024 = 1073741824
+GPU warm-up completed.
+GPU run 1 time = 0.330952 s
+GPU run 2 time = 0.334203 s
+GPU run 3 time = 0.334891 s
+GPU run 4 time = 0.337424 s
+GPU run 5 time = 0.33906 s
+CPU: No FFTW wisdom found, plans will be measured.
+CPU warm-up completed.
+CPU run 1 time = 11.9273 s
+CPU run 2 time = 12.7428 s
+CPU run 3 time = 13.5741 s
+CPU run 4 time = 14.2809 s
+CPU run 5 time = 13.7809 s
+FFTW wisdom saved to fftpoisson3d_fftw_wisdom_1024_1024_1024.dat.
+
+================== GPU vs CPU Comparison ==================
+Solver | Avg Time (s) |         L2 Error |        Max Error
+-------|--------------|------------------|-----------------
+GPU    |     0.335306 |     8.755893e-15 |     5.573320e-14
+CPU    |    13.261201 |     8.710855e-15 |     5.484502e-14
+===========================================================
+```
+
 ---
 
 ## Doxygen Documentation
@@ -292,9 +331,10 @@ computations using the AMD ROCm platform.
 
 It depends on the following third-party software:
 
-- **HIP**, **hipBLAS** and **hipRAND** (AMD ROCm)
+- **HIP**, **hipBLAS**, **hipFFT** and **hipRAND** (AMD ROCm)
 - **OpenBLAS**
 - **OpenMPI**
+- **FFTW**
 
 These components are licensed under their respective open-source licenses and
 are **not** covered by this project's Apache License 2.0. Users are responsible for
