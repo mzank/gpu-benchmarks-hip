@@ -46,6 +46,25 @@
  *
  * @note Periodic boundary conditions are assumed.
  *
+ * @section run How to Run
+ *
+ * To run the solver, provide the grid dimensions as three command-line arguments:
+ * \code
+ * ./fftpoisson3d Nx Ny Nz
+ * \endcode
+ * Example:
+ * \code
+ * ./fftpoisson3d 1024 1024 1024
+ * \endcode
+ *
+ * The program outputs:
+ * - GPU and CPU execution times
+ * - L2 and maximum error norms
+ * - FFTW wisdom generation or usage for faster CPU FFT planning
+ *
+ * > **Tip:** Wisdom files for FFTW are saved as `fftpoisson3d_fftw_wisdom_Nx_Ny_Nz.dat`.
+ *   If you change the grid size, a new wisdom file will be generated.
+ *
  * @author Marco Zank
  * @date 2025-12-22
  */

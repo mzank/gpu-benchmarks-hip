@@ -276,7 +276,7 @@ GPU result: -0.00378359 in 0.0204081 s
 CPU result: -0.00378631 in 0.683242 s
 ```
 
-FFT Poisson Solver (fftpoisson3d.cpp) for `./fftpoisson3d 1024 1024 1024`
+FFT Poisson Solver (fftpoisson3d.cpp) for `./build/fftpoisson3d 1024 1024 1024`
 ```yaml
 Running FFT Poisson solver with grid: 1024 x 1024 x 1024 = 1073741824
 GPU warm-up completed.
