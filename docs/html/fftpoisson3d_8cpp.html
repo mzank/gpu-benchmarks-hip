@@ -171,7 +171,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">GPU</a>    |     0.335306 |     8.755893e-15 |     5.573320e-14</div>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">CPU</a>    |    13.261201 |     8.710855e-15 |     5.484502e-14</div>
 <div class="line">===========================================================</div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00198">fftpoisson3d.cpp:198</a></div></div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00217">fftpoisson3d.cpp:217</a></div></div>
 </div><!-- fragment --><p>This program computes the solution of a periodic 3D Poisson problem by transforming the right-hand side into Fourier space, dividing by the squared wave number, and transforming back.</p>
 <p>Both CPU and GPU implementations are provided:</p><ul>
 <li>CPU: FFTW with multithreading and optional wisdom</li>
@@ -183,6 +183,18 @@ Variables</h2></td></tr>
 <li>FFTW3 3.3.10 (with threads support)</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>Periodic boundary conditions are assumed.</dd></dl>
+<h1><a class="anchor" id="run"></a>
+How to Run</h1>
+<p>To run the solver, provide the grid dimensions as three command-line arguments: </p><div class="fragment"><div class="line">./<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">fftpoisson3d</a> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">Nx</a> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">Ny</a> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">Nz</a></div>
+</div><!-- fragment --><p> Example: </p><div class="fragment"><div class="line">./<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">fftpoisson3d</a> 1024 1024 1024</div>
+</div><!-- fragment --><p>The program outputs:</p><ul>
+<li>GPU and CPU execution times</li>
+<li>L2 and maximum error norms</li>
+<li>FFTW wisdom generation or usage for faster CPU FFT planning</li>
+</ul>
+<blockquote class="doxtable">
+<p>&zwj;<b>Tip:</b> Wisdom files for FFTW are saved as <code>fftpoisson3d_fftw_wisdom_Nx_Ny_Nz.dat</code>. If you change the grid size, a new wisdom file will be generated. </p>
+</blockquote>
 <dl class="section author"><dt>Author</dt><dd>Marco Zank </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2025-12-22 </dd></dl>
 
