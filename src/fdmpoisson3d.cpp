@@ -39,7 +39,7 @@
  * 
  * @section run How to Run
  *
- * To run the solver, provide the grid dimensions as three command-line arguments:
+ * To run the solver, provide the maximal level of refinement as one command-line argument:
  * \code
  * ./fdmpoisson3d level_max
  * \endcode

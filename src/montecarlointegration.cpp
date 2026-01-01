@@ -2,7 +2,7 @@
  * @file montecarlointegration.cpp
  * @brief Demonstrates Monte Carlo integration on CPU and GPU using HIP.
  * 
- * Example output (measured on 1 node with 4 AMD MI300A APUs):
+ * Example output (measured on 1 AMD MI300A APU):
  * \code
  * GPU config: 14592 blocks x 256 threads
  * GPU result: -0.00378359 in 0.0204081 s
@@ -197,7 +197,7 @@ static __global__ void monteCarloGPU(double* result,
  * 4. Perform CPU Monte Carlo integration and measure execution time.
  * 5. Print results and timing information.
  *
- * @return int Returns 0 on successful execution.
+ * @return int Returns EXIT_SUCCESS on successful execution.
  */
 int main() {
     // ============================================================
