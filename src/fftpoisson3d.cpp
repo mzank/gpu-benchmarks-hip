@@ -403,10 +403,12 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    const size_t Nx = 0, Ny = 0, Nz = 0;
+
     try {
-        const size_t Nx = std::stoul(argv[1]);
-        const size_t Ny = std::stoul(argv[2]);
-        const size_t Nz = std::stoul(argv[3]);
+        Nx = std::stoul(argv[1]);
+        Ny = std::stoul(argv[2]);
+        Nz = std::stoul(argv[3]);
 
         if (Nx == 0 || Ny == 0 || Nz == 0) {
             std::cerr << "Error: Nx, Ny, Nz must be positive integers.\n";
