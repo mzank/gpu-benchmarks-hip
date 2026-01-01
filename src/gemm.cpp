@@ -3,7 +3,7 @@
  * @brief Demonstrates DGEMM (double-precision general matrix-matrix multiplication)
  *        on CPU (using BLAS) and GPU (using hipBLAS) with performance comparison.
  *
- * Example output (measured on 1 node with 4 AMD MI300A APUs):
+ * Example output (measured on 1 AMD MI300A APU):
  * \code
  * ==================== Results ====================
  * CPU DGEMM time: 29002.7 ms
