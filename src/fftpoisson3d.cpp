@@ -406,14 +406,16 @@ int main(int argc, char* argv[])
     size_t Nx = 0, Ny = 0, Nz = 0;
 
     try {
-        Nx = std::stoul(argv[1]);
-        Ny = std::stoul(argv[2]);
-        Nz = std::stoul(argv[3]);
-
-        if (Nx == 0 || Ny == 0 || Nz == 0) {
+        long long temp_Nx = std::stoll(argv[1]);
+        long long temp_Ny = std::stoll(argv[2]);
+        long long temp_Nz = std::stoll(argv[3]);
+        if (temp_Nx <= 0 || temp_Ny <= 0 || temp_Nz <= 0) {
             std::cerr << "Error: Nx, Ny, Nz must be positive integers.\n";
             return EXIT_FAILURE;
         }
+        Nx = static_cast<size_t>(temp_Nx);
+        Ny = static_cast<size_t>(temp_Ny);
+        Nz = static_cast<size_t>(temp_Nz);
     } catch (const std::exception& e) {
         std::cerr << "Invalid input: " << e.what() << "\n";
         return EXIT_FAILURE;
