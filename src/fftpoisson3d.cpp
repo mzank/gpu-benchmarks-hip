@@ -403,7 +403,7 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    const size_t Nx = 0, Ny = 0, Nz = 0;
+    size_t Nx = 0, Ny = 0, Nz = 0;
 
     try {
         Nx = std::stoul(argv[1]);
