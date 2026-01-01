@@ -1,0 +1,27 @@
+./fdmpoisson3d 3
+Number of CPU cores: 48
+Host thread affinity policy - thread mapping on every core
+Number of HIP devices in the system: 1
+rocALUTION ver 4.0.1-b0adf82
+rocALUTION platform is initialized
+Accelerator backend: HIP
+OpenMP threads: 48
+rocBLAS ver 5.1.1.f322e9ab61
+rocSPARSE ver 4.1.0-f322e9ab61
+------------------------------------------------
+Selected HIP device: 0
+Device name: AMD Instinct MI300A
+totalGlobalMem: 131072 MByte
+clockRate: 2100000
+compute capability: 9.4
+------------------------------------------------
+MPI is not initialized
+Refinement study (Poisson 3D, SAAMG + CG)
+----------------------------------------------------------------------------------------------
+Level |   Nx=Ny=Nz   |    DoF     | CG iters |  Solver time [s]  |   L2 error    |  Linf error
+----------------------------------------------------------------------------------------------
+    0 |           64 |     238328 |       21 |             0.492 |     9.818e-02 |   6.310e-01
+    1 |          128 |    2000376 |       24 |             0.161 |     1.914e-02 |   1.204e-01
+    2 |          256 |   16387064 |       29 |             0.947 |     4.488e-03 |   2.831e-02
+    3 |          512 |  132651000 |       34 |             7.703 |     1.101e-03 |   7.020e-03
+----------------------------------------------------------------------------------------------

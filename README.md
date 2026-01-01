@@ -10,6 +10,7 @@ It includes the following examples:
 5. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
 6. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
 7. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
+8. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time and numerical errors (L2 and Linf) across grid levels.
 
 ---
 
@@ -26,6 +27,7 @@ All example results were obtained on a single node with **4 AMD MI300A APUs**, w
 - OpenBLAS 0.3.20
 - RCCL 2.27.7
 - FFTW3 3.3.10 (with threads support)
+- rocALUTION 4.0.1
 
 > **Note:** FFTW should be built with threads support (`--enable-threads`) for optimal CPU performance.
 
@@ -107,7 +109,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 - AMD GPU supported by ROCm
 - ROCm (e.g. 7.1.1)
-- HIP, hipBLAS, hipFFT and hipRAND
+- HIP, hipBLAS, hipFFT and hipRAND, rocALUTION
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
 - RCCL (e.g. 2.27.7)
@@ -136,6 +138,7 @@ make build/mpigpuawarering
 make build/rcclring
 make build/montecarlointegration
 make build/fftpoisson3d
+make build/fdmpoisson3d
 ```
 
 All binaries are generated in the `build/` directory.
@@ -205,6 +208,12 @@ where `Nx`, `Ny`, `Nz` are the grid dimensions.
 The program automatically loads the existing wisdom file, drastically reducing CPU FFT plan time.  
 
 > **Tip:** Wisdom files are grid-size specific. Changing any of `Nx`, `Ny`, or `Nz` will require generating a new wisdom file.
+
+### Run 3D FDM Poisson Solver
+```bash
+./build/fdmpoisson3d 3
+```
+> **Note:** The single argument `level_max` specifies the maximum refinement level. Each level doubles the grid size in each direction starting from 64 points. For example, `level_max=3` runs grids of size 64³, 128³, 256³, and 512³ points. The program reports CG iterations, solver time, and L2/Linf errors for each level.
 
 ---
 
@@ -318,6 +327,37 @@ CPU    |    13.261201 |     8.710855e-15 |     5.484502e-14
 ===========================================================
 ```
 
+3D FDM Poisson Solver (fdmpoisson3d.cpp) for `./build/fdmpoisson3d 3`
+```yaml
+./fdmpoisson3d 3
+Number of CPU cores: 48
+Host thread affinity policy - thread mapping on every core
+Number of HIP devices in the system: 1
+rocALUTION ver 4.0.1-b0adf82
+rocALUTION platform is initialized
+Accelerator backend: HIP
+OpenMP threads: 48
+rocBLAS ver 5.1.1.f322e9ab61
+rocSPARSE ver 4.1.0-f322e9ab61
+------------------------------------------------
+Selected HIP device: 0
+Device name: AMD Instinct MI300A
+totalGlobalMem: 131072 MByte
+clockRate: 2100000
+compute capability: 9.4
+------------------------------------------------
+MPI is not initialized
+Refinement study (Poisson 3D, SAAMG + CG)
+----------------------------------------------------------------------------------------------
+Level |   Nx=Ny=Nz   |    DoF     | CG iters |  Solver time [s]  |   L2 error    |  Linf error
+----------------------------------------------------------------------------------------------
+    0 |           64 |     238328 |       21 |             0.492 |     9.818e-02 |   6.310e-01
+    1 |          128 |    2000376 |       24 |             0.161 |     1.914e-02 |   1.204e-01
+    2 |          256 |   16387064 |       29 |             0.947 |     4.488e-03 |   2.831e-02
+    3 |          512 |  132651000 |       34 |             7.703 |     1.101e-03 |   7.020e-03
+----------------------------------------------------------------------------------------------
+```
+
 ---
 
 ## Doxygen Documentation
@@ -347,7 +387,7 @@ computations using the AMD ROCm platform.
 
 It depends on the following third-party software:
 
-- **HIP**, **hipBLAS**, **hipFFT** and **hipRAND** (AMD ROCm)
+- **HIP**, **hipBLAS**, **hipFFT**, **hipRAND** and **rocALUTION** (AMD ROCm)
 - **OpenBLAS**
 - **OpenMPI**
 - **FFTW**
