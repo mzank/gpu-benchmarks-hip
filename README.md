@@ -10,7 +10,7 @@ It includes the following examples:
 5. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
 6. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
 7. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
-8. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time and numerical errors (L2 and Linf) across grid levels.
+8. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
 
 ---
 
@@ -213,7 +213,7 @@ The program automatically loads the existing wisdom file, drastically reducing C
 ```bash
 ./build/fdmpoisson3d 3
 ```
-> **Note:** The single argument `level_max` specifies the maximum refinement level. Each level doubles the grid size in each direction starting from 64 points. For example, `level_max=3` runs grids of size 64³, 128³, 256³, and 512³ points. The program reports CG iterations, solver time, and L2/Linf errors for each level.
+> **Note:** The single argument `level_max` specifies the maximum refinement level. Each level doubles the grid size in each direction starting from 64 points. For example, `level_max=3` runs grids of size 64³, 128³, 256³, and 512³ points. The program reports CG iterations, solver time on CPU/GPU, and L2/Linf errors for each level.
 
 ---
 
@@ -348,14 +348,14 @@ compute capability: 9.4
 ------------------------------------------------
 MPI is not initialized
 Refinement study (Poisson 3D, SAAMG + CG)
-----------------------------------------------------------------------------------------------
-Level |   Nx=Ny=Nz   |    DoF     | CG iters |  Solver time [s]  |   L2 error    |  Linf error
-----------------------------------------------------------------------------------------------
-    0 |           64 |     238328 |       21 |             0.492 |     9.818e-02 |   6.310e-01
-    1 |          128 |    2000376 |       24 |             0.161 |     1.914e-02 |   1.204e-01
-    2 |          256 |   16387064 |       29 |             0.947 |     4.488e-03 |   2.831e-02
-    3 |          512 |  132651000 |       34 |             7.703 |     1.101e-03 |   7.020e-03
-----------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Level |   Nx=Ny=Nz   |    DoF     | CG iters | GPU Solver time [s] | CPU Solver time [s] |    L2 error   |  Linf error
+----------------------------------------------------------------------------------------------------------------------
+    0 |           64 |     238328 |       21 |               0.447 |               0.640 |     9.818e-02 |   6.310e-01
+    1 |          128 |    2000376 |       24 |               0.162 |               2.163 |     1.914e-02 |   1.204e-01
+    2 |          256 |   16387064 |       29 |               0.940 |              18.137 |     4.488e-03 |   2.831e-02
+    3 |          512 |  132651000 |       34 |               7.675 |             150.312 |     1.101e-03 |   7.020e-03
+----------------------------------------------------------------------------------------------------------------------
 ```
 
 ---

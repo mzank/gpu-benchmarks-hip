@@ -23,14 +23,14 @@
  * ------------------------------------------------
  * MPI is not initialized
  * Refinement study (Poisson 3D, SAAMG + CG)
- * ----------------------------------------------------------------------------------------------
- * Level |   Nx=Ny=Nz   |    DoF     | CG iters |  Solver time [s]  |   L2 error    |  Linf error
- * ----------------------------------------------------------------------------------------------
- *     0 |           64 |     238328 |       21 |             0.492 |     9.818e-02 |   6.310e-01
- *     1 |          128 |    2000376 |       24 |             0.161 |     1.914e-02 |   1.204e-01
- *     2 |          256 |   16387064 |       29 |             0.947 |     4.488e-03 |   2.831e-02
- *     3 |          512 |  132651000 |       34 |             7.703 |     1.101e-03 |   7.020e-03
- * ----------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------------------------------------------------
+ * Level |   Nx=Ny=Nz   |    DoF     | CG iters | GPU Solver time [s] | CPU Solver time [s] |    L2 error   |  Linf error
+ * ----------------------------------------------------------------------------------------------------------------------
+ *     0 |           64 |     238328 |       21 |               0.447 |               0.640 |     9.818e-02 |   6.310e-01
+ *     1 |          128 |    2000376 |       24 |               0.162 |               2.163 |     1.914e-02 |   1.204e-01
+ *     2 |          256 |   16387064 |       29 |               0.940 |              18.137 |     4.488e-03 |   2.831e-02
+ *     3 |          512 |  132651000 |       34 |               7.675 |             150.312 |     1.101e-03 |   7.020e-03
+ * ----------------------------------------------------------------------------------------------------------------------
  * \endcode
  *
  * Hardware and Software Environment:
@@ -53,7 +53,7 @@
  * - Building RHS and exact solution vectors
  * - Solving using rocALUTION with SA-AMG preconditioned CG
  * - Computing L2 and Linf errors
- * - Performance measurement for different refinement levels
+ * - Performance measurement for different refinement levels on CPU and GPU
  *
  * @author Marco Zank
  * @date 2026-01-01
@@ -332,9 +332,9 @@ int main(int argc, char* argv[])
     info_rocalution();
 
     std::cout << "Refinement study (Poisson 3D, SAAMG + CG)\n";
-    std::cout << "----------------------------------------------------------------------------------------------\n";
-    std::cout << "Level |   Nx=Ny=Nz   |    DoF     | CG iters |  Solver time [s]  |   L2 error    |  Linf error\n";
-    std::cout << "----------------------------------------------------------------------------------------------\n";
+    std::cout << "----------------------------------------------------------------------------------------------------------------------\n";
+    std::cout << "Level |   Nx=Ny=Nz   |    DoF     | CG iters | GPU Solver time [s] | CPU Solver time [s] |    L2 error   |  Linf error\n";
+    std::cout << "----------------------------------------------------------------------------------------------------------------------\n";
 
     for (size_t level = 0; level <= level_max; ++level)
     {
@@ -362,60 +362,98 @@ int main(int argc, char* argv[])
 
         x.Allocate("x", static_cast<int>(N_interior));
         b.Allocate("b", static_cast<int>(N_interior));
-
         b.CopyFromHostData(h_b.data());
-        x.Zeros();
 
+        std::vector<double> h_u_exact;
+        build3DVector(Nx, Ny, Nz, h_u_exact, exactSolution);
+
+        // CPU-only solve
+        x.Zeros();        // reset solution vector
+
+        CG<LocalMatrix<double>, LocalVector<double>, double> solver_cpu;
+        SAAMG<LocalMatrix<double>, LocalVector<double>, double> precond_cpu;
+        precond_cpu.SetCoarseningStrategy(PMIS);
+        precond_cpu.Verbose(0);
+        solver_cpu.SetPreconditioner(precond_cpu);
+        solver_cpu.SetOperator(A);
+        solver_cpu.Init(1e-8, 1e-12, 1e+6, 1000);
+        solver_cpu.Verbose(0);
+
+        auto t_start_cpu = std::chrono::high_resolution_clock::now();
+        solver_cpu.Build();
+        solver_cpu.Solve(b, &x);
+        auto t_end_cpu = std::chrono::high_resolution_clock::now();
+        double solver_time_cpu = std::chrono::duration<double>(t_end_cpu - t_start_cpu).count();
+        int cg_iters_cpu = solver_cpu.GetIterationCount();
+        solver_cpu.Clear();
+
+        std::vector<double> h_x_cpu(N_interior);
+        x.CopyToData(h_x_cpu.data());
+        auto [l2_cpu, linf_cpu] = computeErrorL2Linf(h_x_cpu, h_u_exact);
+
+        // GPU solve
+        x.Zeros();        // reset solution vector
         A.MoveToAccelerator();
         x.MoveToAccelerator();
         b.MoveToAccelerator();
 
-        // Solver + preconditioner
-        CG<LocalMatrix<double>, LocalVector<double>, double> solver;
-        SAAMG<LocalMatrix<double>, LocalVector<double>, double> precond;
+        CG<LocalMatrix<double>, LocalVector<double>, double> solver_gpu;
+        SAAMG<LocalMatrix<double>, LocalVector<double>, double> precond_gpu;
+        precond_gpu.SetCoarseningStrategy(PMIS);
+        precond_gpu.Verbose(0);
+        solver_gpu.SetPreconditioner(precond_gpu);
+        solver_gpu.SetOperator(A);
+        solver_gpu.Init(1e-8, 1e-12, 1e+6, 1000);
+        solver_gpu.Verbose(0);
 
-        precond.SetCoarseningStrategy(PMIS);
-        precond.Verbose(0);
-        solver.SetPreconditioner(precond);
-
-        solver.SetOperator(A);
-        solver.Init(1e-8, 1e-12, 1e+6, 1000);
-        solver.Verbose(0);
-
-        // Solve
-        auto t_start = std::chrono::high_resolution_clock::now();
-        solver.Build();
-        solver.Solve(b, &x);
-        auto t_end = std::chrono::high_resolution_clock::now();
-
-        double solver_time = std::chrono::duration<double>(t_end - t_start).count();
-        int cg_iters = solver.GetIterationCount();
-        solver.Clear();
+        auto t_start_gpu = std::chrono::high_resolution_clock::now();
+        solver_gpu.Build();
+        solver_gpu.Solve(b, &x);
+        auto t_end_gpu = std::chrono::high_resolution_clock::now();
+        double solver_time_gpu = std::chrono::duration<double>(t_end_gpu - t_start_gpu).count();
+        int cg_iters_gpu = solver_gpu.GetIterationCount();
+        solver_gpu.Clear();
 
         x.MoveToHost();
-        std::vector<double> h_u_exact;
-        build3DVector(Nx, Ny, Nz, h_u_exact, exactSolution);
+        std::vector<double> h_x_gpu(N_interior);
+        x.CopyToData(h_x_gpu.data());
 
-        std::vector<double> h_x(N_interior);
-        x.CopyToData(h_x.data());
+        auto [l2_gpu, linf_gpu] = computeErrorL2Linf(h_x_gpu, h_u_exact);
 
-        auto [l2, linf] = computeErrorL2Linf(h_x, h_u_exact);
+        if (cg_iters_cpu != cg_iters_gpu) {
+            std::cout << "Mismatch at level " << level
+                    << ": CG iterations CPU=" << cg_iters_cpu
+                    << ", GPU=" << cg_iters_gpu << "\n";
+        }
 
-        // Output
+        if (std::abs(l2_cpu - l2_gpu) > 1e-12) {
+            std::cout << "Mismatch at level " << level
+                    << ": L2 error CPU=" << std::scientific << l2_cpu
+                    << ", GPU=" << l2_gpu << "\n";
+        }
+
+        if (std::abs(linf_cpu - linf_gpu) > 1e-12) {
+            std::cout << "Mismatch at level " << level
+                    << ": Linf error CPU=" << std::scientific << linf_cpu
+                    << ", GPU=" << linf_gpu << "\n";
+        }
+
+        // Output both GPU and CPU times and errors from GPU
         std::cout << std::setw(5) << level << " | "
-                  << std::setw(12) << Nx << " | "
-                  << std::setw(10) << N_interior << " | "
-                  << std::setw(8) << cg_iters << " | "
-                  << std::fixed << std::setprecision(3)
-                  << std::setw(17) << solver_time << " | "
-                  << std::scientific << std::setprecision(3)
-                  << std::setw(13) << l2 << " | "
-                  << std::setw(11) << linf << "\n";
+                << std::setw(12) << Nx << " | "
+                << std::setw(10) << N_interior << " | "
+                << std::setw(8) << cg_iters_gpu << " | "
+                << std::fixed << std::setprecision(3)
+                << std::setw(19) << solver_time_gpu << " | "
+                << std::setw(19) << solver_time_cpu << " | "
+                << std::scientific << std::setprecision(3)
+                << std::setw(13) << l2_gpu << " | "
+                << std::setw(11) << linf_gpu << "\n";
 
         A.Clear(); x.Clear(); b.Clear();
     }
 
-    std::cout << "----------------------------------------------------------------------------------------------\n";
+    std::cout << "----------------------------------------------------------------------------------------------------------------------\n";
     stop_rocalution();
     return EXIT_SUCCESS;
 }
