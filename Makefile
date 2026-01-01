@@ -5,6 +5,7 @@ CFLAGS = -std=c11 -O3
 
 LDFLAGS_GEMM = -lhipblas -lopenblas -ltbb
 LDFLAGS_VEC  = -ltbb
+LDFLAGS_SORT = -lhiprand -ltbb
 LDFLAGS_MPI  = -lmpi -lnuma
 LDFLAGS_RCCL  = -lrccl -lmpi -lnuma
 LDFLAGS_MC   = -lhiprand -ltbb -lm
@@ -14,6 +15,7 @@ LDFLAGS_FDMP = -lrocalution -ltbb
 # Source files
 SRC_GEMM = src/gemm.cpp
 SRC_VEC  = src/vectorreduction.cpp
+SRC_SORT = src/sorting.cpp
 SRC_MPI  = src/mpigpuring.c
 SRC_MPI_AWARE = src/mpigpuawarering.c
 SRC_RCCL = src/rcclring.c
@@ -25,6 +27,7 @@ SRC_FDMP = src/fdmpoisson3d.cpp
 BUILD_DIR = build
 GEMM_BIN = $(BUILD_DIR)/gemm
 VEC_BIN  = $(BUILD_DIR)/vectorreduction
+SORT_BIN = $(BUILD_DIR)/sorting
 MPI_BIN  = $(BUILD_DIR)/mpigpuring
 MPI_AWARE_BIN = $(BUILD_DIR)/mpigpuawarering
 RCCL_BIN = $(BUILD_DIR)/rcclring
@@ -33,7 +36,7 @@ FFT_BIN  = $(BUILD_DIR)/fftpoisson3d
 FDMP_BIN = $(BUILD_DIR)/fdmpoisson3d
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN) $(FFT_BIN) $(FDMP_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(SORT_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN) $(FFT_BIN) $(FDMP_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
@@ -42,6 +45,10 @@ $(GEMM_BIN): $(SRC_GEMM)
 # Build vector reduction
 $(VEC_BIN): $(SRC_VEC)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_VEC) -o $@
+
+# Build Sorting example (CPU + GPU)
+$(SORT_BIN): $(SRC_SORT)
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_SORT) -o $@
 
 # Build MPI GPU Ring with CPU-based MPI
 $(MPI_BIN): $(SRC_MPI)

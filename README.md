@@ -4,13 +4,14 @@ This project demonstrates **GPU-accelerated computations using HIP** on AMD GPUs
 It includes the following examples:
 
 1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS.  
-2. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
-3. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
-4. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
-5. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
-6. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
-7. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
-8. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
+1. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
+1. **Large-Scale Integer Sorting (CPU + GPU)** (`sorting.cpp`) – Sorts ~1 billion integers using hipRAND for GPU random number generation, hipCUB radix sort on GPU, and C++17 parallel STL sort on CPU, with performance comparison.
+1. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
+1. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
+1. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
+1. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
+1. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
+1. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
 
 ---
 
@@ -109,7 +110,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 - AMD GPU supported by ROCm
 - ROCm (e.g. 7.1.1)
-- HIP, hipBLAS, hipFFT and hipRAND, rocALUTION
+- HIP, hipBLAS, hipCUB, hipFFT, hipRAND and rocALUTION
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
 - RCCL (e.g. 2.27.7)
@@ -133,6 +134,7 @@ make
 # Or build individually
 make build/gemm
 make build/vectorreduction
+make build/sorting
 make build/mpigpuring
 make build/mpigpuawarering
 make build/rcclring
@@ -157,6 +159,11 @@ After building, you can run the programs as follows:
 ### Run Vector Reduction example
 ```bash
 ./build/vectorreduction
+```
+
+### Run Sorting example
+```bash
+./build/sorting
 ```
 
 ### Run MPI GPU Ring example with CPU-based MPI
@@ -238,6 +245,13 @@ Vector Reduction (vectorreduction.cpp)
 sum_CPU: 1.07374e+09, time: 49.8159 ms
 sum_GPU: 1.07374e+09, time: 4.55739 ms
 |sum_CPU - sum_GPU| = 0
+```
+
+Large-Scale Sorting (sorting.cpp)
+```yaml
+Results match: YES
+CPU parallel sort time: 3181.42 ms
+GPU hipCUB sort time:  41.4023 ms
 ```
 
 MPI GPU Ring with CPU-based MPI (mpigpuring.c)
@@ -387,7 +401,7 @@ computations using the AMD ROCm platform.
 
 It depends on the following third-party software:
 
-- **HIP**, **hipBLAS**, **hipFFT**, **hipRAND** and **rocALUTION** (AMD ROCm)
+- **HIP**, **hipBLAS**, **hipCUB**, **hipFFT**, **hipRAND** and **rocALUTION** (AMD ROCm)
 - **OpenBLAS**
 - **OpenMPI**
 - **FFTW**
