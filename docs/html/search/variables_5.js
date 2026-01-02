@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['threads_5fper_5fblock_0',['threads_per_block',['../montecarlointegration_8cpp_a0d5d8914d592815bea97ed141dfecf94.html#a0d5d8914d592815bea97ed141dfecf94',1,'THREADS_PER_BLOCK:&#160;montecarlointegration.cpp'],['../vectorreduction_8cpp_ac3cf880d303b0479288945e79a242f06.html#ac3cf880d303b0479288945e79a242f06',1,'THREADS_PER_BLOCK:&#160;vectorreduction.cpp']]]
+  ['pi_0',['pi',['../fdmpoisson3d_8cpp_a299aabc5fc8285cbf99025330a3d0d0d.html#a299aabc5fc8285cbf99025330a3d0d0d',1,'PI:&#160;fdmpoisson3d.cpp'],['../fftpoisson3d_8cpp_a299aabc5fc8285cbf99025330a3d0d0d.html#a299aabc5fc8285cbf99025330a3d0d0d',1,'PI:&#160;fftpoisson3d.cpp']]]
 ];

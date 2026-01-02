@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['l_0',['L',['../fftpoisson3d_8cpp_a00a5985f55e3aaf7364c28006bb82492.html#a00a5985f55e3aaf7364c28006bb82492',1,'fftpoisson3d.cpp']]]
+  ['domain_5flength_0',['DOMAIN_LENGTH',['../fdmpoisson3d_8cpp_ab0383835d094be289679e3536907fdeb.html#ab0383835d094be289679e3536907fdeb',1,'fdmpoisson3d.cpp']]]
 ];

@@ -128,7 +128,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 Build the examples using the provided **Makefile**:
 
 ```bash
-# Build both examples
+# Build all examples
 make
 
 # Or build individually

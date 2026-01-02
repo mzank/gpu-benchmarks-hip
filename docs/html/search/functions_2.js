@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exactsolution_0',['exactSolution',['../fftpoisson3d_8cpp_a594b2d1b87046b64391a64d5d9cfd836.html#a594b2d1b87046b64391a64d5d9cfd836',1,'fftpoisson3d.cpp']]]
+  ['dgemm_5f_0',['dgemm_',['../gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4',1,'gemm.cpp']]]
 ];

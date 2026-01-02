@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dgemm_5f_0',['dgemm_',['../gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4',1,'gemm.cpp']]]
+  ['computeerrorl2linf_0',['computeErrorL2Linf',['../fdmpoisson3d_8cpp_afbf63f236353186de1a2147adc48cd67.html#afbf63f236353186de1a2147adc48cd67',1,'fdmpoisson3d.cpp']]]
 ];

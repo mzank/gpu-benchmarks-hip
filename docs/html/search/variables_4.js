@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['pi_0',['PI',['../fftpoisson3d_8cpp_a299aabc5fc8285cbf99025330a3d0d0d.html#a299aabc5fc8285cbf99025330a3d0d0d',1,'fftpoisson3d.cpp']]]
+  ['n_0',['n',['../montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365',1,'N:&#160;montecarlointegration.cpp'],['../sorting_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365',1,'N:&#160;sorting.cpp']]],
+  ['n_5fruns_1',['N_RUNS',['../fftpoisson3d_8cpp_a08837313dac9640e87d5c863bdda5d56.html#a08837313dac9640e87d5c863bdda5d56',1,'fftpoisson3d.cpp']]]
 ];
