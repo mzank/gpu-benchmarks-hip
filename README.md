@@ -3,7 +3,8 @@
 This project demonstrates **GPU-accelerated computations using HIP** on AMD GPUs.  
 It includes the following examples:
 
-1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS.  
+1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS. 
+1. **Sparse Matrix–Matrix Multiplication (SpGEMM)** (`spgemm.cpp`) – Demonstrates large-scale sparse general matrix–matrix multiplication on the GPU using **hipSPARSE** with CSR matrices.
 1. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
 1. **Large-Scale Integer Sorting (CPU + GPU)** (`sorting.cpp`) – Sorts ~1 billion integers using hipRAND for GPU random number generation, hipCUB radix sort on GPU, and C++17 parallel STL sort on CPU, with performance comparison.
 1. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
@@ -110,7 +111,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 - AMD GPU supported by ROCm
 - ROCm (e.g. 7.1.1)
-- HIP, hipBLAS, hipCUB, hipFFT, hipRAND and rocALUTION
+- HIP, hipBLAS, hipSPARSE, hipCUB, hipFFT, hipRAND and rocALUTION
 - BLAS library (e.g. OpenBLAS)
 - MPI library (e.g. OpenMPI) with NUMA binding support
 - RCCL (e.g. 2.27.7)
@@ -133,6 +134,7 @@ make
 
 # Or build individually
 make build/gemm
+make build/spgemm
 make build/vectorreduction
 make build/sorting
 make build/mpigpuring
@@ -154,6 +156,11 @@ After building, you can run the programs as follows:
 ### Run DGEMM example
 ```bash
 ./build/gemm
+```
+
+### Run SpGEMM example
+```bash
+./spgemm
 ```
 
 ### Run Vector Reduction example
@@ -237,6 +244,25 @@ DGEMM (gemm.cpp)
 CPU DGEMM time: 66171.6 ms
 GPU hipBLAS DGEMM time: 1940.62 ms
 Maximum |C_cpu - C_gpu| = 2.20098e-10
+```
+
+Sparse Matrix–Matrix Multiplication (spgemm.cpp)
+```yaml
+Matrix A: 10000000 x 10000000 with nnz = 100000000
+Matrix B: 10000000 x 10000000 with nnz = 100000000
+Matrix C: 10000000 x 10000000 with nnz = 999994750
+First few entries of C:
+C[0] = 25.9424 (col 21866)
+C[1] = 24.7442 (col 51201)
+C[2] = 22.9642 (col 298749)
+C[3] = 0.909916 (col 379633)
+C[4] = 37.8533 (col 383441)
+C[5] = 27.9135 (col 393337)
+C[6] = 25.0793 (col 406619)
+C[7] = 15.1923 (col 426698)
+C[8] = 28.3851 (col 576559)
+C[9] = 18.1633 (col 703616)
+SpGEMM completed successfully.
 ```
 
 Vector Reduction (vectorreduction.cpp)
@@ -401,7 +427,7 @@ computations using the AMD ROCm platform.
 
 It depends on the following third-party software:
 
-- **HIP**, **hipBLAS**, **hipCUB**, **hipFFT**, **hipRAND** and **rocALUTION** (AMD ROCm)
+- **HIP**, **hipBLAS**, **hipSPARSE**, **hipCUB**, **hipFFT**, **hipRAND** and **rocALUTION** (AMD ROCm)
 - **OpenBLAS**
 - **OpenMPI**
 - **FFTW**

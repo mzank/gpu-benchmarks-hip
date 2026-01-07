@@ -1,0 +1,15 @@
+Matrix A: 10000000 x 10000000 with nnz = 100000000
+Matrix B: 10000000 x 10000000 with nnz = 100000000
+Matrix C: 10000000 x 10000000 with nnz = 999994750
+First few entries of C:
+C[0] = 25.9424 (col 21866)
+C[1] = 24.7442 (col 51201)
+C[2] = 22.9642 (col 298749)
+C[3] = 0.909916 (col 379633)
+C[4] = 37.8533 (col 383441)
+C[5] = 27.9135 (col 393337)
+C[6] = 25.0793 (col 406619)
+C[7] = 15.1923 (col 426698)
+C[8] = 28.3851 (col 576559)
+C[9] = 18.1633 (col 703616)
+SpGEMM completed successfully.

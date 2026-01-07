@@ -4,6 +4,7 @@ CXXFLAGS = -std=c++17 -O3
 CFLAGS = -std=c11 -O3
 
 LDFLAGS_GEMM = -lhipblas -lopenblas -ltbb
+LDFLAGS_SPGEMM = -lhipsparse
 LDFLAGS_VEC  = -ltbb
 LDFLAGS_SORT = -lhiprand -ltbb
 LDFLAGS_MPI  = -lmpi -lnuma
@@ -14,6 +15,7 @@ LDFLAGS_FDMP = -lrocalution -ltbb
 
 # Source files
 SRC_GEMM = src/gemm.cpp
+SRC_SPGEMM = src/spgemm.cpp
 SRC_VEC  = src/vectorreduction.cpp
 SRC_SORT = src/sorting.cpp
 SRC_MPI  = src/mpigpuring.c
@@ -26,6 +28,7 @@ SRC_FDMP = src/fdmpoisson3d.cpp
 # Output binaries
 BUILD_DIR = build
 GEMM_BIN = $(BUILD_DIR)/gemm
+SPGEMM_BIN = $(BUILD_DIR)/spgemm
 VEC_BIN  = $(BUILD_DIR)/vectorreduction
 SORT_BIN = $(BUILD_DIR)/sorting
 MPI_BIN  = $(BUILD_DIR)/mpigpuring
@@ -36,11 +39,15 @@ FFT_BIN  = $(BUILD_DIR)/fftpoisson3d
 FDMP_BIN = $(BUILD_DIR)/fdmpoisson3d
 
 # Default target: build all examples
-all: $(BUILD_DIR) $(GEMM_BIN) $(VEC_BIN) $(SORT_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN) $(FFT_BIN) $(FDMP_BIN)
+all: $(BUILD_DIR) $(GEMM_BIN) $(SPGEMM_BIN) $(VEC_BIN) $(SORT_BIN) $(MPI_BIN) $(MPI_AWARE_BIN) $(RCCL_BIN) $(MC_BIN) $(FFT_BIN) $(FDMP_BIN)
 
 # Build gemm
 $(GEMM_BIN): $(SRC_GEMM)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_GEMM) -o $@
+
+# Build SpGEMM example (hipSPARSE)
+$(SPGEMM_BIN): $(SRC_SPGEMM)
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS_SPGEMM) -o $@
 
 # Build vector reduction
 $(VEC_BIN): $(SRC_VEC)
