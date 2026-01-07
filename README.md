@@ -160,7 +160,7 @@ After building, you can run the programs as follows:
 
 ### Run SpGEMM example
 ```bash
-./spgemm
+./build/spgemm
 ```
 
 ### Run Vector Reduction example
