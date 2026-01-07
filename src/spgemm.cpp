@@ -44,9 +44,6 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <algorithm>
-#include <cstdlib>
-#include <cmath>
 
 /**
  * @brief Macro to check HIP runtime API errors.
