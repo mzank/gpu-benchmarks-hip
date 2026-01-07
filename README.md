@@ -234,9 +234,9 @@ Program outputs shown below are also saved under the `output/` directory
 DGEMM (gemm.cpp)
 ```yaml
 ==================== Results ====================
-CPU DGEMM time: 29002.7 ms
-GPU hipBLAS DGEMM time: 2170.61 ms
-Maximum |C_cpu - C_gpu| = 2.30102e-10
+CPU DGEMM time: 66171.6 ms
+GPU hipBLAS DGEMM time: 1940.62 ms
+Maximum |C_cpu - C_gpu| = 2.20098e-10
 ```
 
 Vector Reduction (vectorreduction.cpp)

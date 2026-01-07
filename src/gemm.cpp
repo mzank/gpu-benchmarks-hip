@@ -6,9 +6,9 @@
  * Example output (measured on 1 AMD MI300A APU):
  * \code
  * ==================== Results ====================
- * CPU DGEMM time: 29002.7 ms
- * GPU hipBLAS DGEMM time: 2170.61 ms
- * Maximum |C_cpu - C_gpu| = 2.30102e-10
+ * CPU DGEMM time: 66171.6 ms
+ * GPU hipBLAS DGEMM time: 1940.62 ms
+ * Maximum |C_cpu - C_gpu| = 2.20098e-10
  * \endcode
  *
  * Hardware and Software Environment:
