@@ -72,7 +72,7 @@
  *
  * \f[
  *   -\Delta u(x,y,z) = f(x,y,z),
- *   \quad (x,y,z) \in [0,L)^3,
+ *   \quad (x,y,z) \in (0,L)^3,
  * \f]
  *
  * where \f$ \Delta \f$ denotes the Laplace operator,
@@ -128,7 +128,8 @@
  *   \quad \mathbf{k} \neq \mathbf{0},
  * \f]
  *
- * where \f$ \mathbf{k} = (k_x,k_y,k_z) \f$ is the integer wave-number vector.
+ * where \f$ \mathbf{k} = (k_x,k_y,k_z) \f$ are the integer wave-number vectors
+ * and \f$ \hat{f}_{\mathbf{k}} \f$ are the modes of \f$ f \f$.
  * The zero mode is set to
  * \f[
  *   \hat{u}_{\mathbf{0}} = 0,

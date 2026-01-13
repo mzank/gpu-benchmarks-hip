@@ -178,7 +178,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">GPU</a>    |     0.335306 |     8.755893e-15 |     5.573320e-14</div>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">CPU</a>    |    13.261201 |     8.710855e-15 |     5.484502e-14</div>
 <div class="line">===========================================================</div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00319">fftpoisson3d.cpp:319</a></div></div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00320">fftpoisson3d.cpp:320</a></div></div>
 </div><!-- fragment --><p>This program computes the solution of a periodic 3D Poisson problem by transforming the right-hand side into Fourier space, dividing by the squared wave number, and transforming back.</p>
 <p>Both CPU and GPU implementations are provided:</p><ul>
 <li>CPU: FFTW with multithreading and optional wisdom</li>
@@ -208,7 +208,7 @@ Mathematical Problem Description</h1>
 <p class="formulaDsp">
 \[
   -\Delta u(x,y,z) = f(x,y,z),
-  \quad (x,y,z) \in [0,L)^3,
+  \quad (x,y,z) \in (0,L)^3,
 \]
 </p>
 <p>where \( \Delta \) denotes the Laplace operator, \( u \) is the unknown scalar field, and \( f \) is a given right-hand side. Periodicity is assumed in all spatial directions:</p>
@@ -255,7 +255,7 @@ Fourier-Space Solution Method</h2>
   \quad \mathbf{k} \neq \mathbf{0},
 \]
 </p>
-<p>where \( \mathbf{k} = (k_x,k_y,k_z) \) is the integer wave-number vector. The zero mode is set to  </p><p class="formulaDsp">
+<p>where \( \mathbf{k} = (k_x,k_y,k_z) \) are the integer wave-number vectors and \( \hat{f}_{\mathbf{k}} \) are the modes of \( f \). The zero mode is set to  </p><p class="formulaDsp">
 \[
   \hat{u}_{\mathbf{0}} = 0,
 \]
