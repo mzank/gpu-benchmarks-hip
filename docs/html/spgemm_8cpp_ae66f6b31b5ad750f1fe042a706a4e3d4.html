@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -356,11 +363,11 @@ $(function() {
 <div class="line"><span class="lineno">  318</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;SpGEMM completed successfully.\n&quot;</span>;</div>
 <div class="line"><span class="lineno">  319</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">EXIT_SUCCESS</a>;</div>
 <div class="line"><span class="lineno">  320</span>}</div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00217">fftpoisson3d.cpp:217</a></div></div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00316">fftpoisson3d.cpp:316</a></div></div>
 <div class="ttc" id="aspgemm_8cpp_ac1608f7d72cd68bee2c1995f083ef81b_html_ac1608f7d72cd68bee2c1995f083ef81b"><div class="ttname"><a href="spgemm_8cpp_ac1608f7d72cd68bee2c1995f083ef81b.html#ac1608f7d72cd68bee2c1995f083ef81b">HIPSPARSE_CHECK</a></div><div class="ttdeci">#define HIPSPARSE_CHECK(err)</div><div class="ttdoc">Macro to check hipSPARSE API errors.</div><div class="ttdef"><b>Definition</b> <a href="spgemm_8cpp_source.html#l00065">spgemm.cpp:65</a></div></div>
 <div class="ttc" id="aspgemm_8cpp_ad32de5b8f658b6661897a0582187e5c8_html_ad32de5b8f658b6661897a0582187e5c8"><div class="ttname"><a href="spgemm_8cpp_ad32de5b8f658b6661897a0582187e5c8.html#ad32de5b8f658b6661897a0582187e5c8">HIP_CHECK</a></div><div class="ttdeci">#define HIP_CHECK(err)</div><div class="ttdoc">Macro to check HIP runtime API errors.</div><div class="ttdef"><b>Definition</b> <a href="spgemm_8cpp_source.html#l00053">spgemm.cpp:53</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="spgemm_8cpp_source.html#l00053">HIP_CHECK</a>, <a class="el" href="spgemm_8cpp_source.html#l00065">HIPSPARSE_CHECK</a>, and <a class="el" href="fftpoisson3d_8cpp_source.html#l00217">initRhsKernel()</a>.</p>
+<p class="reference">References <a class="el" href="spgemm_8cpp_source.html#l00053">HIP_CHECK</a>, <a class="el" href="spgemm_8cpp_source.html#l00065">HIPSPARSE_CHECK</a>, and <a class="el" href="fftpoisson3d_8cpp_source.html#l00316">initRhsKernel()</a>.</p>
 
 </div>
 </div>

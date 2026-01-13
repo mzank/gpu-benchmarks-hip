@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -238,7 +245,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">EXIT_SUCCESS</a>;</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>}</div>
 </div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00217">fftpoisson3d.cpp:217</a></div></div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00316">fftpoisson3d.cpp:316</a></div></div>
 <div class="ttc" id="agemm_8cpp_a2775524fd26fbcc4fcb729b926e089af_html_a2775524fd26fbcc4fcb729b926e089af"><div class="ttname"><a href="gemm_8cpp_a2775524fd26fbcc4fcb729b926e089af.html#a2775524fd26fbcc4fcb729b926e089af">HIPBLAS_CHECK</a></div><div class="ttdeci">#define HIPBLAS_CHECK(status)</div><div class="ttdoc">Macro to check hipBLAS API errors.</div><div class="ttdef"><b>Definition</b> <a href="gemm_8cpp_source.html#l00097">gemm.cpp:97</a></div></div>
 <div class="ttc" id="agemm_8cpp_aaf41965393ffaedeec1441c5bc1c04e9_html_aaf41965393ffaedeec1441c5bc1c04e9"><div class="ttname"><a href="gemm_8cpp_aaf41965393ffaedeec1441c5bc1c04e9.html#aaf41965393ffaedeec1441c5bc1c04e9">HIP_CHECK</a></div><div class="ttdeci">#define HIP_CHECK(status)</div><div class="ttdoc">Macro to check HIP runtime API errors.</div><div class="ttdef"><b>Definition</b> <a href="gemm_8cpp_source.html#l00082">gemm.cpp:82</a></div></div>
 <div class="ttc" id="agemm_8cpp_ab7c07a53e19f291439911f7da41200f4_html_ab7c07a53e19f291439911f7da41200f4"><div class="ttname"><a href="gemm_8cpp_ab7c07a53e19f291439911f7da41200f4.html#ab7c07a53e19f291439911f7da41200f4">dgemm_</a></div><div class="ttdeci">void dgemm_(const char *transa, const char *transb, const int *m, const int *n, const int *k, const double *alpha, const double *A, const int *lda, const double *B, const int *ldb, const double *beta, double *C, const int *ldc)</div><div class="ttdoc">External CPU BLAS DGEMM routine.</div></div>

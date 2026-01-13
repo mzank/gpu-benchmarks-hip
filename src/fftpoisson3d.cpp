@@ -65,6 +65,105 @@
  * > **Tip:** Wisdom files for FFTW are saved as `fftpoisson3d_fftw_wisdom_Nx_Ny_Nz.dat`.
  *   If you change the grid size, a new wisdom file will be generated.
  *
+ * @section math Mathematical Problem Description
+ *
+ * This program solves the three-dimensional Poisson equation
+ * with periodic boundary conditions on a cubic domain:
+ *
+ * \f[
+ *   -\Delta u(x,y,z) = f(x,y,z),
+ *   \quad (x,y,z) \in [0,L)^3,
+ * \f]
+ *
+ * where \f$ \Delta \f$ denotes the Laplace operator,
+ * \f$ u \f$ is the unknown scalar field, and
+ * \f$ f \f$ is a given right-hand side.
+ * Periodicity is assumed in all spatial directions:
+ *
+ * \f[
+ *   u(x+L,y,z) = u(x,y+L,z) = u(x,y,z+L) = u(x,y,z).
+ * \f]
+ *
+ * The domain length is fixed to \f$ L = 2\pi \f$, which is
+ * particularly convenient for Fourier-based methods.
+ *
+ * @subsection math_exact Exact solution and Source Term
+ *
+ * To verify correctness, the right-hand side \f$ f \f$ is constructed
+ * from a known analytical solution:
+ *
+ * \f[
+ *   u(x,y,z) = \exp(\phi(x,y,z)),
+ * \f]
+ *
+ * where \f$ \phi \f$ is a smooth, periodic combination
+ * of trigonometric modes:
+ *
+ * \f[
+ * \phi(x,y,z) =
+ *   0.7 \cos(x)
+ * + 0.5 \cos(2y)
+ * + 0.3 \cos(3z)
+ * + 0.2 \sin(x+y) 
+ * + 0.1 \sin(y+z)
+ * + 0.05 \cos(28x)
+ * + 0.05 \sin(27(y+z)).
+ * \f]
+ *
+ * The source term is computed analytically as
+ *
+ * \f[
+ *   f(x,y,z) = -\Delta u(x,y,z)
+ *   = -\left( \Delta \phi(x,y,z) + |\nabla \phi(x,y,z)|^2 \right) e^{\phi(x,y,z)}.
+ * \f]
+ *
+ * @subsection math_fft Fourier-Space Solution Method
+ *
+ * Using a three-dimensional discrete Fourier transform,
+ * the Poisson equation decouples into independent algebraic
+ * equations in Fourier space:
+ *
+ * \f[
+ *   \hat{u}_{\mathbf{k}} = \frac{\hat{f}_{\mathbf{k}}}{|\mathbf{k}|^2},
+ *   \quad \mathbf{k} \neq \mathbf{0},
+ * \f]
+ *
+ * where \f$ \mathbf{k} = (k_x,k_y,k_z) \f$ is the integer wave-number vector.
+ * The zero mode \f$ \mathbf{k} = \mathbf{0} \f$ is set to zero,
+ * which enforces a zero-mean solution consistent with periodic
+ * boundary conditions.
+ *
+ * The numerical algorithm consists of:
+ * - Forward 3D FFT of the right-hand side \f$ f \f$
+ * - Division by \f$ |\mathbf{k}|^2 \f$ in Fourier space
+ * - Inverse 3D FFT to recover \f$ u \f$ in physical space
+ * - Normalization by the total number of grid points
+ *
+ * @subsection math_discretization Discretization
+ *
+ * The domain is discretized using a uniform Cartesian grid
+ * of size \f$ N_x \times N_y \times N_z \f$, with grid points
+ *
+ * \f[
+ *   x_i = \frac{L i}{N_x}, \quad
+ *   y_j = \frac{L j}{N_y}, \quad
+ *   z_k = \frac{L k}{N_z}.
+ * \f]
+ *
+ * Spectral accuracy is achieved for smooth periodic solutions,
+ * and the numerical error is dominated by floating-point
+ * roundoff rather than discretization error.
+ *
+ * @subsection math_validation Error Metrics
+ *
+ * The numerical solutions computed on CPU and GPU are compared
+ * against the analytical solution using:
+ * - Discrete \f$ L^2 \f$ error norm
+ * - Maximum norm
+ *
+ * The analytical solution is shifted to zero mean before comparison
+ * to match the treatment of the zero Fourier mode.
+ * 
  * @author Marco Zank
  * @date 2025-12-22
  */
