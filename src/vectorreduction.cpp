@@ -3,7 +3,7 @@
  * @brief Demonstrates parallel reduction (sum) of a large vector
  *        on CPU and GPU using HIP.
  *
- * Example output (measured on 1 node with 4 AMD MI300A APUs):
+ * Example output (measured on 1 AMD MI300A APU):
  * \code
  * ==================== Results ====================
  * sum_CPU: 1.07374e+09, time: 49.8159 ms
