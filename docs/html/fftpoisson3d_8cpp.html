@@ -178,7 +178,7 @@ Variables</h2></td></tr>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">GPU</a>    |     0.335306 |     8.755893e-15 |     5.573320e-14</div>
 <div class="line"><a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">CPU</a>    |    13.261201 |     8.710855e-15 |     5.484502e-14</div>
 <div class="line">===========================================================</div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00316">fftpoisson3d.cpp:316</a></div></div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00319">fftpoisson3d.cpp:319</a></div></div>
 </div><!-- fragment --><p>This program computes the solution of a periodic 3D Poisson problem by transforming the right-hand side into Fourier space, dividing by the squared wave number, and transforming back.</p>
 <p>Both CPU and GPU implementations are provided:</p><ul>
 <li>CPU: FFTW with multithreading and optional wisdom</li>
@@ -255,7 +255,12 @@ Fourier-Space Solution Method</h2>
   \quad \mathbf{k} \neq \mathbf{0},
 \]
 </p>
-<p>where \( \mathbf{k} = (k_x,k_y,k_z) \) is the integer wave-number vector. The zero mode \( \mathbf{k} = \mathbf{0} \) is set to zero, which enforces a zero-mean solution consistent with periodic boundary conditions.</p>
+<p>where \( \mathbf{k} = (k_x,k_y,k_z) \) is the integer wave-number vector. The zero mode is set to  </p><p class="formulaDsp">
+\[
+  \hat{u}_{\mathbf{0}} = 0,
+\]
+</p>
+<p> which enforces a zero-mean solution consistent with periodic boundary conditions.</p>
 <p>The numerical algorithm consists of:</p><ul>
 <li>Forward 3D FFT of the right-hand side \( f \)</li>
 <li>Division by \( |\mathbf{k}|^2 \) in Fourier space</li>
@@ -274,7 +279,7 @@ Discretization</h2>
 </p>
 <p>Spectral accuracy is achieved for smooth periodic solutions, and the numerical error is dominated by floating-point roundoff rather than discretization error.</p>
 <h2><a class="anchor" id="math_validation"></a>
-Error Metrics</h2>
+Errors</h2>
 <p>The numerical solutions computed on CPU and GPU are compared against the analytical solution using:</p><ul>
 <li>Discrete \( L^2 \) error norm</li>
 <li>Maximum norm</li>

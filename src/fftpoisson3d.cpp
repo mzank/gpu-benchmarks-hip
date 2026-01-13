@@ -129,7 +129,10 @@
  * \f]
  *
  * where \f$ \mathbf{k} = (k_x,k_y,k_z) \f$ is the integer wave-number vector.
- * The zero mode \f$ \mathbf{k} = \mathbf{0} \f$ is set to zero,
+ * The zero mode is set to
+ * \f[
+ *   \hat{u}_{\mathbf{0}} = 0,
+ * \f]
  * which enforces a zero-mean solution consistent with periodic
  * boundary conditions.
  *
@@ -154,7 +157,7 @@
  * and the numerical error is dominated by floating-point
  * roundoff rather than discretization error.
  *
- * @subsection math_validation Error Metrics
+ * @subsection math_validation Errors
  *
  * The numerical solutions computed on CPU and GPU are compared
  * against the analytical solution using:

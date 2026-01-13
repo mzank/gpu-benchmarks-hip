@@ -144,20 +144,20 @@ $(function() {
 
 <p>Exact analytical solution u(x,y,z). </p>
 
-<p class="definition">Definition at line <a class="el" href="fftpoisson3d_8cpp_source.html#l00241">241</a> of file <a class="el" href="fftpoisson3d_8cpp_source.html">fftpoisson3d.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>{</div>
-<div class="line"><span class="lineno">  243</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">phi</a> =</div>
-<div class="line"><span class="lineno">  244</span>          0.7  * std::cos(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>)</div>
-<div class="line"><span class="lineno">  245</span>        + 0.5  * std::cos(2.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a>)</div>
-<div class="line"><span class="lineno">  246</span>        + 0.3  * std::cos(3.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>)</div>
-<div class="line"><span class="lineno">  247</span>        + 0.2  * std::sin(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a>)</div>
-<div class="line"><span class="lineno">  248</span>        + 0.1  * std::sin(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>)</div>
-<div class="line"><span class="lineno">  249</span>        + 0.05 * std::cos(28.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>)</div>
-<div class="line"><span class="lineno">  250</span>        + 0.05 * std::sin(27.0 * (<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>));</div>
-<div class="line"><span class="lineno">  251</span> </div>
-<div class="line"><span class="lineno">  252</span>    <span class="keywordflow">return</span> std::exp(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">phi</a>);</div>
-<div class="line"><span class="lineno">  253</span>}</div>
-<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00316">fftpoisson3d.cpp:316</a></div></div>
+<p class="definition">Definition at line <a class="el" href="fftpoisson3d_8cpp_source.html#l00244">244</a> of file <a class="el" href="fftpoisson3d_8cpp_source.html">fftpoisson3d.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  245</span>{</div>
+<div class="line"><span class="lineno">  246</span>    <span class="keyword">const</span> <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">phi</a> =</div>
+<div class="line"><span class="lineno">  247</span>          0.7  * std::cos(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>)</div>
+<div class="line"><span class="lineno">  248</span>        + 0.5  * std::cos(2.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a>)</div>
+<div class="line"><span class="lineno">  249</span>        + 0.3  * std::cos(3.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>)</div>
+<div class="line"><span class="lineno">  250</span>        + 0.2  * std::sin(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a>)</div>
+<div class="line"><span class="lineno">  251</span>        + 0.1  * std::sin(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>)</div>
+<div class="line"><span class="lineno">  252</span>        + 0.05 * std::cos(28.0 * <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>)</div>
+<div class="line"><span class="lineno">  253</span>        + 0.05 * std::sin(27.0 * (<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">y</a> + <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">z</a>));</div>
+<div class="line"><span class="lineno">  254</span> </div>
+<div class="line"><span class="lineno">  255</span>    <span class="keywordflow">return</span> std::exp(<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">phi</a>);</div>
+<div class="line"><span class="lineno">  256</span>}</div>
+<div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00319">fftpoisson3d.cpp:319</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
