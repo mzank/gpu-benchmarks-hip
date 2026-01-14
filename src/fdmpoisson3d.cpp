@@ -116,8 +116,7 @@
  * \f[
  *   A \mathbf{u} = \mathbf{b},
  * \f]
- * where \f$A\f$ is a symmetric positive definite matrix with a 7-point stencil.
- * The matrix is assembled in compressed sparse row (CSR) format.
+ * where \f$A\f$ is a symmetric positive definite matrix, which is assembled in compressed sparse row (CSR) format.
  *
  * @subsection linear_solver Linear Solver
  *
@@ -125,7 +124,7 @@
  * preconditioned by Smoothed Aggregation Algebraic Multigrid (SA-AMG),
  * as provided by rocALUTION.
  *
- * Both CPU and GPU (HIP backend) executions are performed for performance comparison.
+ * Both CPU and GPU (with HIP backend) executions are performed for performance comparison.
  *
  * @subsection math_validation Errors
  *

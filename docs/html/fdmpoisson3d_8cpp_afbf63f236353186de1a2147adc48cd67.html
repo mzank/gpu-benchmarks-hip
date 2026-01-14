@@ -141,32 +141,32 @@ $(function() {
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::pair&lt;double,double&gt; L2 and Linf error </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="fdmpoisson3d_8cpp_source.html#l00374">374</a> of file <a class="el" href="fdmpoisson3d_8cpp_source.html">fdmpoisson3d.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  376</span>{</div>
-<div class="line"><span class="lineno">  377</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> = <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.size();</div>
-<div class="line"><span class="lineno">  378</span> </div>
-<div class="line"><span class="lineno">  379</span>    <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">l2</a> = std::sqrt(</div>
-<div class="line"><span class="lineno">  380</span>        std::transform_reduce(</div>
-<div class="line"><span class="lineno">  381</span>            std::execution::par,</div>
-<div class="line"><span class="lineno">  382</span>            <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.begin(), <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.end(),</div>
-<div class="line"><span class="lineno">  383</span>            <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">u_exact</a>.begin(),</div>
-<div class="line"><span class="lineno">  384</span>            0.0,</div>
-<div class="line"><span class="lineno">  385</span>            std::plus&lt;&gt;(),</div>
-<div class="line"><span class="lineno">  386</span>            [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">xi</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ui</a>){ double e = xi - ui; return e*e; }</div>
-<div class="line"><span class="lineno">  387</span>        ) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>)</div>
-<div class="line"><span class="lineno">  388</span>    );</div>
-<div class="line"><span class="lineno">  389</span> </div>
-<div class="line"><span class="lineno">  390</span>    <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">linf</a> = std::transform_reduce(</div>
-<div class="line"><span class="lineno">  391</span>        std::execution::par,</div>
-<div class="line"><span class="lineno">  392</span>        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.begin(), <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.end(),</div>
-<div class="line"><span class="lineno">  393</span>        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">u_exact</a>.begin(),</div>
-<div class="line"><span class="lineno">  394</span>        0.0,</div>
-<div class="line"><span class="lineno">  395</span>        [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">a</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">b</a>){ return std::max(a,b); },</div>
-<div class="line"><span class="lineno">  396</span>        [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">xi</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ui</a>){ return std::abs(xi-ui); }</div>
-<div class="line"><span class="lineno">  397</span>    );</div>
-<div class="line"><span class="lineno">  398</span> </div>
-<div class="line"><span class="lineno">  399</span>    <span class="keywordflow">return</span> {<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">l2</a>, <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">linf</a>};</div>
-<div class="line"><span class="lineno">  400</span>}</div>
+<p class="definition">Definition at line <a class="el" href="fdmpoisson3d_8cpp_source.html#l00373">373</a> of file <a class="el" href="fdmpoisson3d_8cpp_source.html">fdmpoisson3d.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  375</span>{</div>
+<div class="line"><span class="lineno">  376</span>    <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a> = <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.size();</div>
+<div class="line"><span class="lineno">  377</span> </div>
+<div class="line"><span class="lineno">  378</span>    <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">l2</a> = std::sqrt(</div>
+<div class="line"><span class="lineno">  379</span>        std::transform_reduce(</div>
+<div class="line"><span class="lineno">  380</span>            std::execution::par,</div>
+<div class="line"><span class="lineno">  381</span>            <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.begin(), <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.end(),</div>
+<div class="line"><span class="lineno">  382</span>            <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">u_exact</a>.begin(),</div>
+<div class="line"><span class="lineno">  383</span>            0.0,</div>
+<div class="line"><span class="lineno">  384</span>            std::plus&lt;&gt;(),</div>
+<div class="line"><span class="lineno">  385</span>            [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">xi</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ui</a>){ double e = xi - ui; return e*e; }</div>
+<div class="line"><span class="lineno">  386</span>        ) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a>)</div>
+<div class="line"><span class="lineno">  387</span>    );</div>
+<div class="line"><span class="lineno">  388</span> </div>
+<div class="line"><span class="lineno">  389</span>    <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">linf</a> = std::transform_reduce(</div>
+<div class="line"><span class="lineno">  390</span>        std::execution::par,</div>
+<div class="line"><span class="lineno">  391</span>        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.begin(), <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">x</a>.end(),</div>
+<div class="line"><span class="lineno">  392</span>        <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">u_exact</a>.begin(),</div>
+<div class="line"><span class="lineno">  393</span>        0.0,</div>
+<div class="line"><span class="lineno">  394</span>        [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">a</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">b</a>){ return std::max(a,b); },</div>
+<div class="line"><span class="lineno">  395</span>        [](<span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">xi</a>, <span class="keywordtype">double</span> <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">ui</a>){ return std::abs(xi-ui); }</div>
+<div class="line"><span class="lineno">  396</span>    );</div>
+<div class="line"><span class="lineno">  397</span> </div>
+<div class="line"><span class="lineno">  398</span>    <span class="keywordflow">return</span> {<a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">l2</a>, <a class="code hl_function" href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">linf</a>};</div>
+<div class="line"><span class="lineno">  399</span>}</div>
 <div class="ttc" id="afftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67_html_a34e09da5dc935815f1e89458afc57b67"><div class="ttname"><a href="fftpoisson3d_8cpp_a34e09da5dc935815f1e89458afc57b67.html#a34e09da5dc935815f1e89458afc57b67">initRhsKernel</a></div><div class="ttdeci">static __global__ void initRhsKernel(hipfftDoubleComplex *d_data, size_t Nx, size_t Ny, size_t Nz)</div><div class="ttdoc">Initializes the RHS on the GPU.</div><div class="ttdef"><b>Definition</b> <a href="fftpoisson3d_8cpp_source.html#l00320">fftpoisson3d.cpp:320</a></div></div>
 <div class="ttc" id="amontecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365_html_ade6c365880e00a7c1a8ea0dd9487d365"><div class="ttname"><a href="montecarlointegration_8cpp_ade6c365880e00a7c1a8ea0dd9487d365.html#ade6c365880e00a7c1a8ea0dd9487d365">N</a></div><div class="ttdeci">constexpr std::size_t N</div><div class="ttdoc">Total number of Monte Carlo samples.</div><div class="ttdef"><b>Definition</b> <a href="montecarlointegration_8cpp_source.html#l00070">montecarlointegration.cpp:70</a></div></div>
 </div><!-- fragment -->

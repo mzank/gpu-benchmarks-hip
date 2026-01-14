@@ -231,11 +231,11 @@ Spatial Discretization</h2>
   A \mathbf{u} = \mathbf{b},
 \]
 </p>
-<p> where \(A\) is a symmetric positive definite matrix with a 7-point stencil. The matrix is assembled in compressed sparse row (CSR) format.</p>
+<p> where \(A\) is a symmetric positive definite matrix, which is assembled in compressed sparse row (CSR) format.</p>
 <h2><a class="anchor" id="linear_solver"></a>
 Linear Solver</h2>
 <p>The linear system is solved using the Conjugate Gradient (CG) method preconditioned by Smoothed Aggregation Algebraic Multigrid (SA-AMG), as provided by rocALUTION.</p>
-<p>Both CPU and GPU (HIP backend) executions are performed for performance comparison.</p>
+<p>Both CPU and GPU (with HIP backend) executions are performed for performance comparison.</p>
 <h2><a class="anchor" id="math_validation"></a>
 Errors</h2>
 <p>The numerical solution is compared against the exact solution sampled at grid points using:</p><ul>
