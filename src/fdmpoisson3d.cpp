@@ -55,6 +55,97 @@
  * - Computing L2 and Linf errors
  * - Performance measurement for different refinement levels on CPU and GPU
  *
+ * @section math Mathematical Problem Description
+ *
+ * This program solves the three-dimensional Poisson equation on a cubic domain
+ * using a second-order finite difference method (FDM) with homogeneous Dirichlet
+ * boundary conditions.
+ *
+ * We consider the Poisson equation
+ * \f[
+ *   -\Delta u(x,y,z) = f(x,y,z), \quad (x,y,z) \in \Omega,
+ * \f]
+ * where the computational domain is
+ * \f[
+ *   \Omega = (0, L)^3, \quad L = 2\pi.
+ * \f]
+ *
+ * Homogeneous Dirichlet boundary conditions are imposed:
+ * \f[
+ *   u(x,y,z) = 0, \quad (x,y,z) \in \partial\Omega.
+ * \f]
+ *
+ * @subsection math_exact Exact solution and Source Term
+ *
+ * A manufactured solution is used to verify correctness and convergence:
+ * \f[
+ *   u(x,y,z) = \sin(x)\sin(y)\sin(z)\cos(xyz).
+ * \f]
+ *
+ * The right-hand side \f$f(x,y,z)\f$ is computed analytically as
+ * \f[
+ *   f(x,y,z) = -\Delta u(x,y,z),
+ * \f]
+ * and implemented explicitly in @ref rhsFunction.
+ *
+ * @subsection discretization Spatial Discretization
+ *
+ * The domain is discretized using a uniform Cartesian grid with
+ * \f$N_x = N_y = N_z = N\f$ points in each direction.
+ * The grid spacing is
+ * \f[
+ *   h_x = h_y = h_z = h = \frac{L}{N-1}.
+ * \f]
+ *
+ * Unknowns are defined only at interior grid points, excluding boundary nodes.
+ * Let \f$u_{i,j,k} \approx u(x_i, y_j, z_k) \f$ denote the numerical approximation
+ * at interior grid point \f$(x_i,y_j,z_k)\f$.
+ *
+ * The 3D Laplacian is approximated using a second-order central difference stencil:
+ * \f[
+ * -\Delta u(x_i, y_j, z_k) \approx
+ * \frac{2}{h_x^2} u_{i,j,k}
+ * +\frac{2}{h_y^2} u_{i,j,k}
+ * +\frac{2}{h_z^2} u_{i,j,k}
+ * -\frac{1}{h_x^2}(u_{i-1,j,k} + u_{i+1,j,k})
+ * -\frac{1}{h_y^2}(u_{i,j-1,k} + u_{i,j+1,k}) 
+ * -\frac{1}{h_z^2}(u_{i,j,k-1} + u_{i,j,k+1}).
+ * \f]
+ *
+ * This results in a sparse linear system
+ * \f[
+ *   A \mathbf{u} = \mathbf{b},
+ * \f]
+ * where \f$A\f$ is a symmetric positive definite matrix with a 7-point stencil.
+ * The matrix is assembled in compressed sparse row (CSR) format.
+ *
+ * @subsection linear_solver Linear Solver
+ *
+ * The linear system is solved using the Conjugate Gradient (CG) method
+ * preconditioned by Smoothed Aggregation Algebraic Multigrid (SA-AMG),
+ * as provided by rocALUTION.
+ *
+ * Both CPU and GPU (HIP backend) executions are performed for performance comparison.
+ *
+ * @subsection math_validation Errors
+ *
+ * The numerical solution is compared against the exact solution
+ * sampled at grid points using:
+ * - Discrete \f$ L^2 \f$ error norm
+ * - Maximum norm
+ *
+ * These norms are computed in @ref computeErrorL2Linf.
+ *
+ * @subsection refinement Refinement Study
+ *
+ * A refinement study is performed by successively doubling the grid resolution:
+ * \f[
+ *   N = 64 \cdot 2^{\ell}, \quad \ell = 0,1,\dots,\text{level}_{\max}.
+ * \f]
+ *
+ * For each level, solver iteration counts, execution times, and discretization
+ * errors are reported to assess scalability and convergence behavior. 
+ * 
  * @author Marco Zank
  * @date 2026-01-01
  */
