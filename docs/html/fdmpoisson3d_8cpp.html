@@ -176,6 +176,81 @@ How to Run</h1>
 <li>Computing L2 and Linf errors</li>
 <li>Performance measurement for different refinement levels on CPU and GPU</li>
 </ul>
+<h1><a class="anchor" id="math"></a>
+Mathematical Problem Description</h1>
+<p>This program solves the three-dimensional Poisson equation on a cubic domain using a second-order finite difference method (FDM) with homogeneous Dirichlet boundary conditions.</p>
+<p>We consider the Poisson equation  </p><p class="formulaDsp">
+\[
+  -\Delta u(x,y,z) = f(x,y,z), \quad (x,y,z) \in \Omega,
+\]
+</p>
+<p> where the computational domain is  </p><p class="formulaDsp">
+\[
+  \Omega = (0, L)^3, \quad L = 2\pi.
+\]
+</p>
+<p>Homogeneous Dirichlet boundary conditions are imposed:  </p><p class="formulaDsp">
+\[
+  u(x,y,z) = 0, \quad (x,y,z) \in \partial\Omega.
+\]
+</p>
+<h2><a class="anchor" id="math_exact"></a>
+Exact solution and Source Term</h2>
+<p>A manufactured solution is used to verify correctness and convergence:  </p><p class="formulaDsp">
+\[
+  u(x,y,z) = \sin(x)\sin(y)\sin(z)\cos(xyz).
+\]
+</p>
+<p>The right-hand side \(f(x,y,z)\) is computed analytically as  </p><p class="formulaDsp">
+\[
+  f(x,y,z) = -\Delta u(x,y,z),
+\]
+</p>
+<p> and implemented explicitly in <a class="el" href="fdmpoisson3d_8cpp_a0a5f1ebe680786caa78e2398d2aef484.html#a0a5f1ebe680786caa78e2398d2aef484">rhsFunction</a>.</p>
+<h2><a class="anchor" id="discretization"></a>
+Spatial Discretization</h2>
+<p>The domain is discretized using a uniform Cartesian grid with \(N_x = N_y = N_z = N\) points in each direction. The grid spacing is  </p><p class="formulaDsp">
+\[
+  h_x = h_y = h_z = h = \frac{L}{N-1}.
+\]
+</p>
+<p>Unknowns are defined only at interior grid points, excluding boundary nodes. Let \(u_{i,j,k} \approx u(x_i, y_j, z_k) \) denote the numerical approximation at interior grid point \((x_i,y_j,z_k)\).</p>
+<p>The 3D Laplacian is approximated using a second-order central difference stencil:  </p><p class="formulaDsp">
+\[
+-\Delta u(x_i, y_j, z_k) \approx
+\frac{2}{h_x^2} u_{i,j,k}
++\frac{2}{h_y^2} u_{i,j,k}
++\frac{2}{h_z^2} u_{i,j,k}
+-\frac{1}{h_x^2}(u_{i-1,j,k} + u_{i+1,j,k})
+-\frac{1}{h_y^2}(u_{i,j-1,k} + u_{i,j+1,k}) 
+-\frac{1}{h_z^2}(u_{i,j,k-1} + u_{i,j,k+1}).
+\]
+</p>
+<p>This results in a sparse linear system  </p><p class="formulaDsp">
+\[
+  A \mathbf{u} = \mathbf{b},
+\]
+</p>
+<p> where \(A\) is a symmetric positive definite matrix with a 7-point stencil. The matrix is assembled in compressed sparse row (CSR) format.</p>
+<h2><a class="anchor" id="linear_solver"></a>
+Linear Solver</h2>
+<p>The linear system is solved using the Conjugate Gradient (CG) method preconditioned by Smoothed Aggregation Algebraic Multigrid (SA-AMG), as provided by rocALUTION.</p>
+<p>Both CPU and GPU (HIP backend) executions are performed for performance comparison.</p>
+<h2><a class="anchor" id="math_validation"></a>
+Errors</h2>
+<p>The numerical solution is compared against the exact solution sampled at grid points using:</p><ul>
+<li>Discrete \( L^2 \) error norm</li>
+<li>Maximum norm</li>
+</ul>
+<p>These norms are computed in <a class="el" href="fdmpoisson3d_8cpp_afbf63f236353186de1a2147adc48cd67.html#afbf63f236353186de1a2147adc48cd67">computeErrorL2Linf</a>.</p>
+<h2><a class="anchor" id="refinement"></a>
+Refinement Study</h2>
+<p>A refinement study is performed by successively doubling the grid resolution:  </p><p class="formulaDsp">
+\[
+  N = 64 \cdot 2^{\ell}, \quad \ell = 0,1,\dots,\text{level}_{\max}.
+\]
+</p>
+<p>For each level, solver iteration counts, execution times, and discretization errors are reported to assess scalability and convergence behavior.</p>
 <dl class="section author"><dt>Author</dt><dd>Marco Zank </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2026-01-01 </dd></dl>
 
