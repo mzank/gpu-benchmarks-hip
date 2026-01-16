@@ -1,6 +1,6 @@
 # HIP
 
-This project demonstrates **GPU-accelerated computations using HIP** on AMD GPUs.  
+This project demonstrates **GPU-accelerated computations using HIP** in C and C++ on AMD GPUs.  
 It includes the following examples:
 
 1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS. 
