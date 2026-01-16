@@ -122,6 +122,8 @@ GPU[3]		: (Topology) Numa Affinity: 3
 
 > **Optional:** `libnuma` can improve CPU memory locality on multi-socket systems. OpenMPI’s `--bind-to numa` is sufficient for most setups. If `libnuma` is not installed, it can be removed from the linker flags in the Makefile.
 
+> **Note:** Some examples do not use MPI because they are run on 1 AMD MI300A APU.
+
 ---
 
 ## Build Instructions
