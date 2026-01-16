@@ -118,7 +118,7 @@ GPU[3]		: (Topology) Numa Affinity: 3
 - FFTW3 (e.g. 3.3.10 with threads support)
 - GNU Make
 - C++17-compatible compiler for HIP/C++ sources (e.g. `hipcc`)
-- C11-compatible compiler for pure C MPI examples (e.g. `hipcc`)
+- C11-compatible compiler with HIP support for pure C MPI examples (e.g. `hipcc`)
 
 > **Optional:** `libnuma` can improve CPU memory locality on multi-socket systems. OpenMPI’s `--bind-to numa` is sufficient for most setups. If `libnuma` is not installed, it can be removed from the linker flags in the Makefile.
 
@@ -188,7 +188,7 @@ export HSA_ENABLE_SDMA=0  # disables GPU DMA for GPU-aware direct transfers
 mpirun -np 4 -mca pml ucx --bind-to numa --map-by numa --report-bindings ./build/mpigpuawarering
 ```
 
-> **Note:** This example requires a **GPU-aware MPI** build (e.g. OpenMPI with UCX and ROCm support). GPU device pointers are passed directly to `MPI_Isend`/`MPI_Irecv` without host staging.
+> **Note:** This example requires a **GPU-aware MPI** build (e.g. OpenMPI with UCX and ROCm support). GPU device pointers are passed directly to `MPI_Isend`/`MPI_Irecv` without host staging. Behavior may vary depending on ROCm version and UCX transport selection.
 
 ### Run RCCL GPU Ring example
 ```bash
