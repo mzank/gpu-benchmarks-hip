@@ -1,4 +1,4 @@
-# HIP
+# GPU Benchmarks HIP
 
 This project demonstrates **GPU-accelerated computations using HIP** in C and C++ on AMD GPUs.  
 It includes the following examples:
