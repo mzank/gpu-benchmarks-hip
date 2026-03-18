@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Zank
+    given-names: Marco
+title: "gpu-benchmarks-hip"
