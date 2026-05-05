@@ -33,14 +33,17 @@
  * @date 2025-12-12
  */
 
-#include <iostream>
-#include <vector>
-#include <random>
+#include <cstdlib>
 #include <algorithm>
-#include <execution>
-#include <numeric>
 #include <chrono>
 #include <cmath>
+#include <execution>
+#include <functional>
+#include <iostream>
+#include <numeric>
+#include <random>
+#include <thread>
+#include <vector>
 
 #include <hip/hip_runtime.h>
 #include <hipblas/hipblas.h>
