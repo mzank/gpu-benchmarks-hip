@@ -14,6 +14,30 @@ It includes the following examples:
 1. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
 1. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
 
+## Table of Contents
+
+- [Hardware and Software Environment](#hardware-and-software-environment)
+  - [Software Stack](#software-stack)
+  - [NUMA Hardware Configuration](#numa-hardware-configuration)
+  - [GPU Topology](#gpu-topology)
+- [Requirements](#requirements)
+- [Build Instructions](#build-instructions)
+- [How to Run](#how-to-run)
+  - [Run DGEMM example](#run-dgemm-example)
+  - [Run SpGEMM example](#run-spgemm-example)
+  - [Run Vector Reduction example](#run-vector-reduction-example)
+  - [Run Sorting example](#run-sorting-example)
+  - [Run MPI GPU Ring example with CPU-based MPI](#run-mpi-gpu-ring-example-with-cpu-based-mpi)
+  - [Run MPI GPU Ring example with GPU-aware MPI](#run-mpi-gpu-ring-example-with-gpu-aware-mpi)
+  - [Run RCCL GPU Ring example](#run-rccl-gpu-ring-example)
+  - [Run Monte Carlo Integration example](#run-monte-carlo-integration-example)
+  - [Run 3D FFT Poisson Solver](#run-3d-fft-poisson-solver)
+  - [Run 3D FDM Poisson Solver](#run-3d-fdm-poisson-solver)
+- [Example Outputs](#example-outputs)
+- [Doxygen Documentation](#doxygen-documentation)
+- [Third-Party Software and Trademarks](#third-party-software-and-trademarks)
+- [License](#license)
+
 ---
 
 ## Hardware and Software Environment
