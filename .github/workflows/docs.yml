@@ -1,0 +1,65 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  BUILD_DIR: docs/html
+
+jobs:
+  build:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+
+      - name: Generate docs
+        run: doxygen Doxyfile
+
+      - name: Verify output
+        run: |
+          test -d "$BUILD_DIR"
+          test -f "$BUILD_DIR"/index.html
+
+      - name: Disable Jekyll
+        run: touch "$BUILD_DIR"/.nojekyll
+
+      - name: Setup Pages
+        if: github.event_name == 'push'
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.BUILD_DIR }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
