@@ -3,16 +3,16 @@
 This project demonstrates **GPU-accelerated computations using HIP** in C and C++ on AMD GPUs.  
 It includes the following examples:
 
-1. **DGEMM** (`gemm.cpp`) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS. 
-1. **Sparse Matrix–Matrix Multiplication (SpGEMM)** (`spgemm.cpp`) – Demonstrates large-scale sparse general matrix–matrix multiplication on the GPU using **hipSPARSE** with CSR matrices.
-1. **Vector Reduction** (`vectorreduction.cpp`) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
-1. **Large-Scale Integer Sorting (CPU + GPU)** (`sorting.cpp`) – Sorts ~1 billion integers using hipRAND for GPU random number generation, hipCUB radix sort on GPU, and C++17 parallel STL sort on CPU, with performance comparison.
-1. **MPI GPU Ring (CPU-based MPI, pure C)** (`mpigpuring.c`) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
-1. **MPI GPU Ring (GPU-aware MPI, pure C)** (`mpigpuawarering.c`) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
-1. **RCCL GPU Ring (pure C)** (`rcclring.c`) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
-1. **Monte Carlo Integration (CPU + GPU)** (`montecarlointegration.cpp`) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
-1. **3D FFT Poisson Solver (CPU + GPU)** (`fftpoisson3d.cpp`) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
-1. **3D FDM Poisson Solver (CPU + GPU)** (`fdmpoisson3d.cpp`) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
+1. **DGEMM** ([`gemm.cpp`](src/gemm.cpp)) – Double-precision general matrix-matrix multiplication using CPU BLAS and GPU hipBLAS. 
+1. **Sparse Matrix–Matrix Multiplication (SpGEMM)** ([`spgemm.cpp`](src/spgemm.cpp)) – Demonstrates large-scale sparse general matrix–matrix multiplication on the GPU using **hipSPARSE** with CSR matrices.
+1. **Vector Reduction** ([`vectorreduction.cpp`](src/vectorreduction.cpp)) – Sum reduction of a large vector using CPU parallel STL and a GPU HIP kernel.
+1. **Large-Scale Integer Sorting (CPU + GPU)** ([`sorting.cpp`](src/sorting.cpp)) – Sorts ~1 billion integers using hipRAND for GPU random number generation, hipCUB radix sort on GPU, and C++17 parallel STL sort on CPU, with performance comparison.
+1. **MPI GPU Ring (CPU-based MPI, pure C)** ([`mpigpuring.c`](src/mpigpuring.c)) – Measures GPU-to-GPU ring bandwidth using HIP and CPU-based (non-GPU-aware) MPI.
+1. **MPI GPU Ring (GPU-aware MPI, pure C)** ([`mpigpuawarering.c`](src/mpigpuawarering.c)) – Measures GPU-to-GPU ring bandwidth using HIP and GPU-aware MPI with direct device-buffer communication.
+1. **RCCL GPU Ring (pure C)** ([`rcclring.c`](src/rcclring.c)) – Measures GPU-to-GPU ring bandwidth using HIP, RCCL, and CPU-based MPI.
+1. **Monte Carlo Integration (CPU + GPU)** ([`montecarlointegration.cpp`](src/montecarlointegration.cpp)) – Estimates a 3D integral using Monte Carlo sampling on CPU (C++17 parallel STL) and GPU (HIP + hipRAND), with performance comparison.
+1. **3D FFT Poisson Solver (CPU + GPU)** ([`fftpoisson3d.cpp`](src/fftpoisson3d.cpp)) – Solves a periodic 3D Poisson equation using FFTs on CPU (FFTW) and GPU (hipFFT), compares performance and numerical accuracy.
+1. **3D FDM Poisson Solver (CPU + GPU)** ([`fdmpoisson3d.cpp`](src/fdmpoisson3d.cpp)) – Solves a 3D Poisson equation on a cube with homogeneous Dirichlet boundary conditions using finite differences. Uses rocALUTION with SA-AMG preconditioned CG and performs a refinement study, comparing solver time on CPU/GPU and numerical errors (L2 and Linf) across grid levels.
 
 ## Table of Contents
 
@@ -264,15 +264,20 @@ Program outputs shown below are also saved under the `output/` directory
 
 ## Example Outputs
 
-DGEMM (gemm.cpp)
+<details>
+<summary>DGEMM (gemm.cpp)</summary>
+
 ```yaml
 ==================== Results ====================
 CPU DGEMM time: 66171.6 ms
 GPU hipBLAS DGEMM time: 1940.62 ms
 Maximum |C_cpu - C_gpu| = 2.20098e-10
 ```
+</details>
 
-Sparse Matrix–Matrix Multiplication (spgemm.cpp)
+<details>
+<summary>Sparse Matrix–Matrix Multiplication (spgemm.cpp)</summary>
+
 ```yaml
 Matrix A: 10000000 x 10000000 with nnz = 100000000
 Matrix B: 10000000 x 10000000 with nnz = 100000000
@@ -290,23 +295,32 @@ C[8] = 28.3851 (col 576559)
 C[9] = 18.1633 (col 703616)
 SpGEMM completed successfully.
 ```
+</details>
 
-Vector Reduction (vectorreduction.cpp)
+<details>
+<summary>Vector Reduction (vectorreduction.cpp)</summary>
+
 ```yaml
 ==================== Results ====================
 sum_CPU: 1.07374e+09, time: 49.8159 ms
 sum_GPU: 1.07374e+09, time: 4.55739 ms
 |sum_CPU - sum_GPU| = 0
 ```
+</details>
 
-Large-Scale Sorting (sorting.cpp)
+<details>
+<summary>Large-Scale Sorting (sorting.cpp)</summary>
+
 ```yaml
 Results match: YES
 CPU parallel sort time: 3181.42 ms
 GPU hipCUB sort time:  41.4023 ms
 ```
+</details>
 
-MPI GPU Ring with CPU-based MPI (mpigpuring.c)
+<details>
+<summary>MPI GPU Ring with CPU-based MPI (mpigpuring.c)</summary>
+
 ```yaml
 [hostname:PID] Rank 0 bound to package[0][core:0-23]
 [hostname:PID] Rank 1 bound to package[1][core:24-47]
@@ -323,8 +337,11 @@ Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0
       4294.97 |            12.15 |    1.00 |    4.00 |            12.24 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
       8589.93 |            12.15 |    1.00 |    4.00 |            12.23 |    2.00 |    1.00 |            12.23 |    3.00 |    2.00 |            12.15 |    4.00 |    3.00 |
 ```
+</details>
 
-MPI GPU Ring with GPU-aware MPI (mpigpuawarering.c)
+<details>
+<summary>MPI GPU Ring with GPU-aware MPI (mpigpuawarering.c)</summary>
+
 ```yaml
 [hostname:PID] Rank 0 bound to package[0][core:0-23]
 [hostname:PID] Rank 1 bound to package[1][core:24-47]
@@ -341,8 +358,11 @@ Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0
       4294.97 |           171.27 |    1.00 |    4.00 |           171.24 |    2.00 |    1.00 |           171.04 |    3.00 |    2.00 |           171.04 |    4.00 |    3.00 |
       8589.93 |           171.50 |    1.00 |    4.00 |           171.44 |    2.00 |    1.00 |           171.25 |    3.00 |    2.00 |           171.25 |    4.00 |    3.00 |
 ```
+</details>
 
-RCCL GPU Ring (rcclring.c)
+<details>
+<summary>RCCL GPU Ring (rcclring.c)</summary>
+
 ```yaml
 [hostname:PID] Rank 0 bound to package[0][core:0-23]
 [hostname:PID] Rank 1 bound to package[1][core:24-47]
@@ -359,15 +379,21 @@ Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0
       4294.97 |           171.75 |    1.00 |    4.00 |           172.09 |    2.00 |    1.00 |           172.43 |    3.00 |    2.00 |           172.43 |    4.00 |    3.00 |
       8589.93 |           171.53 |    1.00 |    4.00 |           171.23 |    2.00 |    1.00 |           171.01 |    3.00 |    2.00 |           171.01 |    4.00 |    3.00 |
 ```
+</details>
 
-Monte Carlo Integration (montecarlointegration.cpp)
+<details>
+<summary>Monte Carlo Integration (montecarlointegration.cpp)</summary>
+
 ```yaml
 GPU config: 14592 blocks x 256 threads
 GPU result: -0.00378359 in 0.0204081 s
 CPU result: -0.00378631 in 0.683242 s
 ```
+</details>
 
-FFT Poisson Solver (fftpoisson3d.cpp) for `./build/fftpoisson3d 1024 1024 1024`
+<details>
+<summary>FFT Poisson Solver (fftpoisson3d.cpp)</summary>
+
 ```yaml
 Running FFT Poisson solver with grid: 1024 x 1024 x 1024 = 1073741824
 GPU warm-up completed.
@@ -392,8 +418,11 @@ GPU    |     0.335306 |     8.755893e-15 |     5.573320e-14
 CPU    |    13.261201 |     8.710855e-15 |     5.484502e-14
 ===========================================================
 ```
+</details>
 
-3D FDM Poisson Solver (fdmpoisson3d.cpp) for `./build/fdmpoisson3d 3`
+<details>
+<summary>3D FDM Poisson Solver (fdmpoisson3d.cpp)</summary>
+
 ```yaml
 ./fdmpoisson3d 3
 Number of CPU cores: 48
@@ -423,6 +452,7 @@ Level |   Nx=Ny=Nz   |    DoF     | CG iters | GPU Solver time [s] | CPU Solver 
     3 |          512 |  132651000 |       34 |               7.675 |             150.312 |     1.101e-03 |   7.020e-03
 ----------------------------------------------------------------------------------------------------------------------
 ```
+</details>
 
 ---
 
@@ -435,6 +465,8 @@ To generate it yourself (requires `doxygen` installed):
 ```bash
 doxygen Doxyfile
 ```
+
+After generation, you can view the documentation locally by opening `docs/html/index.html` in your browser.
 
 This documentation includes:
 - Function-level documentation
