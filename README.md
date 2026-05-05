@@ -404,10 +404,8 @@ Level |   Nx=Ny=Nz   |    DoF     | CG iters | GPU Solver time [s] | CPU Solver 
 
 ## Doxygen Documentation
 
-Detailed API and workflow documentation is available as HTML:
-```bash
-docs/html/index.html
-```
+Detailed API and workflow documentation is available online at:
+[https://mzank.github.io/gpu-benchmarks-hip/](https://mzank.github.io/gpu-benchmarks-hip/)
 
 To generate it yourself (requires `doxygen` installed):
 ```bash
