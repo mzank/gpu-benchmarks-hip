@@ -37,7 +37,7 @@
  * - ROCm 7.1.1
  * - rocALUTION 4.0.1
  * 
- * @section run How to Run
+ * @section fdm_run How to Run
  *
  * To run the solver, provide the maximal level of refinement as one command-line argument:
  * \code
@@ -55,7 +55,7 @@
  * - Computing L2 and Linf errors
  * - Performance measurement for different refinement levels on CPU and GPU
  *
- * @section math Mathematical Problem Description
+ * @section fdm_math Mathematical Problem Description
  *
  * This program solves the three-dimensional Poisson equation on a cubic domain
  * using a second-order finite difference method (FDM) with homogeneous Dirichlet
@@ -75,7 +75,7 @@
  *   u(x,y,z) = 0, \quad (x,y,z) \in \partial\Omega.
  * \f]
  *
- * @subsection math_exact Exact solution and Source Term
+ * @subsection fdm_math_exact Exact solution and Source Term
  *
  * A manufactured solution is used to verify correctness and convergence:
  * \f[
@@ -88,7 +88,7 @@
  * \f]
  * and implemented explicitly in @ref rhsFunction.
  *
- * @subsection discretization Spatial Discretization
+ * @subsection fdm_discretization Spatial Discretization
  *
  * The domain is discretized using a uniform Cartesian grid with
  * \f$N_x = N_y = N_z = N\f$ points in each direction.
@@ -118,7 +118,7 @@
  * \f]
  * where \f$A\f$ is a symmetric positive definite matrix, which is assembled in compressed sparse row (CSR) format.
  *
- * @subsection linear_solver Linear Solver
+ * @subsection fdm_linear_solver Linear Solver
  *
  * The linear system is solved using the Conjugate Gradient (CG) method
  * preconditioned by Smoothed Aggregation Algebraic Multigrid (SA-AMG),
@@ -126,7 +126,7 @@
  *
  * Both CPU and GPU (with HIP backend) executions are performed for performance comparison.
  *
- * @subsection math_validation Errors
+ * @subsection fdm_math_validation Errors
  *
  * The numerical solution is compared against the exact solution
  * sampled at grid points using:
@@ -135,7 +135,7 @@
  *
  * These norms are computed in @ref computeErrorL2Linf.
  *
- * @subsection refinement Refinement Study
+ * @subsection fdm_refinement Refinement Study
  *
  * A refinement study is performed by successively doubling the grid resolution:
  * \f[
@@ -398,9 +398,13 @@ static std::pair<double,double> computeErrorL2Linf(const std::vector<double>& x,
     return {l2, linf};
 }
 
-// -----------------------------------------------------------------------------
-// Main
-// -----------------------------------------------------------------------------
+// ============================================================
+// Main program
+// ============================================================
+
+/**
+ * @brief Entry point for the 3D FDM Poisson solver.
+ */
 int main(int argc, char* argv[])
 {
     if (argc != 2) {

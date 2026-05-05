@@ -46,7 +46,7 @@
  *
  * @note Periodic boundary conditions are assumed.
  *
- * @section run How to Run
+ * @section fft_run How to Run
  *
  * To run the solver, provide the grid dimensions as three command-line arguments:
  * \code
@@ -65,7 +65,7 @@
  * > **Tip:** Wisdom files for FFTW are saved as `fftpoisson3d_fftw_wisdom_Nx_Ny_Nz.dat`.
  *   If you change the grid size, a new wisdom file will be generated.
  *
- * @section math Mathematical Problem Description
+ * @section fft_math Mathematical Problem Description
  *
  * This program solves the three-dimensional Poisson equation
  * with periodic boundary conditions on a cubic domain:
@@ -87,7 +87,7 @@
  * The domain length is fixed to \f$ L = 2\pi \f$, which is
  * particularly convenient for Fourier-based methods.
  *
- * @subsection math_exact Exact solution and Source Term
+ * @subsection fft_math_exact Exact solution and Source Term
  *
  * To verify correctness, the right-hand side \f$ f \f$ is constructed
  * from a known analytical solution:
@@ -117,7 +117,7 @@
  *   = -\left( \Delta \phi(x,y,z) + |\nabla \phi(x,y,z)|^2 \right) e^{\phi(x,y,z)}.
  * \f]
  *
- * @subsection math_fft Fourier-Space Solution Method
+ * @subsection fft_math_fft Fourier-Space Solution Method
  *
  * Using a three-dimensional discrete Fourier transform,
  * the Poisson equation decouples into independent algebraic
@@ -143,7 +143,7 @@
  * - Inverse 3D FFT to recover \f$ u \f$ in physical space
  * - Normalization by the total number of grid points
  *
- * @subsection math_discretization Discretization
+ * @subsection fft_math_discretization Discretization
  *
  * The domain is discretized using a uniform Cartesian grid
  * of size \f$ N_x \times N_y \times N_z \f$, with grid points
@@ -158,7 +158,7 @@
  * and the numerical error is dominated by floating-point
  * roundoff rather than discretization error.
  *
- * @subsection math_validation Errors
+ * @subsection fft_math_validation Errors
  *
  * The numerical solutions computed on CPU and GPU are compared
  * against the analytical solution using:
