@@ -34,13 +34,18 @@
  * @date 2025-12-15
  */
 
-#include <hip/hip_runtime.h>
-#include <iostream>
-#include <vector>
-#include <numeric>
-#include <execution>
-#include <chrono>
 #include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+
+#include <chrono>
+#include <execution>
+#include <iostream>
+#include <numeric>
+#include <vector>
+
+#include <hip/hip_runtime.h>
 
 /**
  * @brief Macro to check HIP runtime API errors.
