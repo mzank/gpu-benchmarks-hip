@@ -38,12 +38,15 @@
  * @date 2026-01-07
  */
 
+#include <cstdint>
+
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <vector>
+
 #include <hip/hip_runtime.h>
 #include <hipsparse/hipsparse.h>
-
-#include <iostream>
-#include <vector>
-#include <random>
 
 /**
  * @brief Macro to check HIP runtime API errors.
