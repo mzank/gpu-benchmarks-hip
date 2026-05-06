@@ -33,10 +33,11 @@
  * @date 2025-12-12
  */
 
+#include <cmath>
 #include <cstdlib>
+
 #include <algorithm>
 #include <chrono>
-#include <cmath>
 #include <execution>
 #include <functional>
 #include <iostream>
