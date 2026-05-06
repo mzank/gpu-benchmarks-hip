@@ -30,16 +30,18 @@
  * @date 2026-01-02
  */
 
+#include <cstddef>
+#include <cstdlib>
+
+#include <algorithm>
+#include <chrono>
+#include <execution>
+#include <iostream>
+#include <vector>
+
 #include <hip/hip_runtime.h>
 #include <hipcub/hipcub.hpp>
 #include <hiprand/hiprand.h>
-
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <execution>
-#include <chrono>
-#include <cstdlib>
 
 // ============================================================
 // Error checking macros
