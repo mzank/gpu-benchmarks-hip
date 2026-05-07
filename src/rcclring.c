@@ -42,20 +42,21 @@
  * @date 2025-12-16
  */
 
+#include <limits.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <mpi.h>
+#define __HIP_PLATFORM_AMD__
+#include <hip/hip_runtime.h>
+#include <rccl/rccl.h>
+
 #ifdef USE_NUMA
 #define _GNU_SOURCE       /* Needed for sched_getcpu() */
 #include <sched.h>        /* For sched_getcpu() */
 #include <numa.h>         /* For NUMA allocation and node binding */
 #endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <mpi.h>
-
-#define __HIP_PLATFORM_AMD__
-#include <hip/hip_runtime.h>
-#include <rccl/rccl.h>
 
 /* ------------------------------------------------------------- */
 /* Configuration                                                 */
