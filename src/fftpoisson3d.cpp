@@ -172,20 +172,23 @@
  * @date 2025-12-22
  */
 
-#include <hip/hip_runtime.h>
-#include <hipfft/hipfft.h>
-#include <fftw3.h>
-
 #include <cmath>
-#include <iostream>
-#include <vector>
-#include <numeric>
-#include <execution>
+#include <cstddef>
+#include <cstdlib>
+
 #include <chrono>
+#include <execution>
 #include <iomanip>
-#include <thread>
+#include <iostream>
+#include <numeric>
 #include <sstream>
 #include <string>
+#include <thread>
+#include <vector>
+
+#include <fftw3.h>
+#include <hip/hip_runtime.h>
+#include <hipfft/hipfft.h>
 
 // ============================================================
 // Error checking macros
