@@ -68,14 +68,15 @@
  * @param C       Pointer to matrix C in column-major order (input and output)
  * @param ldc     Leading dimension of C
  */
-extern "C" {
-    void dgemm_(const char* transa, const char* transb,
-                const int* m, const int* n, const int* k,
-                const double* alpha,
-                const double* A, const int* lda,
-                const double* B, const int* ldb,
-                const double* beta,
-                double* C, const int* ldc);
+extern "C"
+{
+    void dgemm_(const char *transa, const char *transb,
+                const int *m, const int *n, const int *k,
+                const double *alpha,
+                const double *A, const int *lda,
+                const double *B, const int *ldb,
+                const double *beta,
+                double *C, const int *ldc);
 }
 
 /**
@@ -83,14 +84,15 @@ extern "C" {
  *
  * Prints the error message and exits if the HIP function fails.
  */
-#define HIP_CHECK(status)                                         \
-    {                                                             \
-        hipError_t err = status;                                  \
-        if (err != hipSuccess) {                                  \
-            std::cerr << "HIP Error: " << hipGetErrorString(err)  \
+#define HIP_CHECK(status)                                        \
+    {                                                            \
+        hipError_t err = status;                                 \
+        if (err != hipSuccess)                                   \
+        {                                                        \
+            std::cerr << "HIP Error: " << hipGetErrorString(err) \
                       << " at line " << __LINE__ << std::endl;   \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+            std::exit(EXIT_FAILURE);                             \
+        }                                                        \
     }
 
 /**
@@ -98,13 +100,14 @@ extern "C" {
  *
  * Prints an error message and exits if the hipBLAS function fails.
  */
-#define HIPBLAS_CHECK(status)                                     \
-    {                                                             \
-        hipblasStatus_t err = status;                             \
-        if (err != HIPBLAS_STATUS_SUCCESS) {                      \
+#define HIPBLAS_CHECK(status)                                               \
+    {                                                                       \
+        hipblasStatus_t err = status;                                       \
+        if (err != HIPBLAS_STATUS_SUCCESS)                                  \
+        {                                                                   \
             std::cerr << "hipBLAS Error at line " << __LINE__ << std::endl; \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+            std::exit(EXIT_FAILURE);                                        \
+        }                                                                   \
     }
 
 /**
@@ -121,7 +124,8 @@ extern "C" {
  *
  * @return int Returns 0 on successful execution.
  */
-int main() {
+int main()
+{
     // -------------------------
     // Matrix size and memory
     // -------------------------
@@ -138,8 +142,8 @@ int main() {
     // -------------------------
     // Host matrices
     // -------------------------
-    std::vector<double> h_matrixA(N * N);         /**< Input matrix A on host */
-    std::vector<double> h_matrixB(N * N);         /**< Input matrix B on host */
+    std::vector<double> h_matrixA(N * N);          /**< Input matrix A on host */
+    std::vector<double> h_matrixB(N * N);          /**< Input matrix B on host */
     std::vector<double> h_matrixC_cpu(N * N, 0.0); /**< Output matrix C computed on CPU */
     std::vector<double> h_matrixC_gpu(N * N, 0.0); /**< Output matrix C computed on GPU */
 
@@ -153,7 +157,8 @@ int main() {
      *
      * Uses thread-local generators to allow parallel execution safely.
      */
-    auto fill_random = [&](double& value) {
+    auto fill_random = [&](double &value)
+    {
         thread_local std::mt19937 gen(rd() + std::hash<std::thread::id>{}(std::this_thread::get_id()));
         thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
         value = dist(gen);
@@ -164,7 +169,7 @@ int main() {
     std::for_each(std::execution::par, h_matrixB.begin(), h_matrixB.end(), fill_random);
 
     const double alpha = 1.0; /**< Scalar multiplier for matrix product */
-    const double beta  = 0.0; /**< Scalar multiplier for existing C */
+    const double beta = 0.0;  /**< Scalar multiplier for existing C */
 
     // ============================================================
     // CPU DGEMM (using BLAS)
@@ -250,9 +255,10 @@ int main() {
         h_matrixC_cpu.begin(), h_matrixC_cpu.end(),
         h_matrixC_gpu.begin(),
         0.0,
-        [](double x, double y) { return std::max(x, y); },
-        [](double a, double b) { return std::abs(a - b); }
-    );
+        [](double x, double y)
+        { return std::max(x, y); },
+        [](double a, double b)
+        { return std::abs(a - b); });
 
     // ============================================================
     // Print performance and validation results

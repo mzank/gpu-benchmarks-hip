@@ -1,7 +1,7 @@
 /**
  * @file montecarlointegration.cpp
  * @brief Demonstrates Monte Carlo integration on CPU and GPU using HIP.
- * 
+ *
  * Example output (measured on 1 AMD MI300A APU):
  * \code
  * GPU config: 14592 blocks x 256 threads
@@ -54,14 +54,15 @@
  *
  * Prints the error message and exits if the HIP function fails.
  */
-#define HIP_CHECK(status)                                         \
-    {                                                             \
-        hipError_t err = status;                                  \
-        if (err != hipSuccess) {                                  \
-            std::cerr << "HIP Error: " << hipGetErrorString(err)  \
+#define HIP_CHECK(status)                                        \
+    {                                                            \
+        hipError_t err = status;                                 \
+        if (err != hipSuccess)                                   \
+        {                                                        \
+            std::cerr << "HIP Error: " << hipGetErrorString(err) \
                       << " at line " << __LINE__ << std::endl;   \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+            std::exit(EXIT_FAILURE);                             \
+        }                                                        \
     }
 
 // ============================================================
@@ -71,7 +72,7 @@
 /**
  * @brief Total number of Monte Carlo samples.
  */
-constexpr std::size_t N = 1'000'000'000;  // 1 billion samples
+constexpr std::size_t N = 1'000'000'000; // 1 billion samples
 
 /**
  * @brief Number of threads per GPU block.
@@ -99,11 +100,9 @@ constexpr std::size_t CPU_SAMPLES_PER_ITER = 16;
  * @param z Third coordinate in [0,1]
  * @return Value of the integrand at (x, y, z)
  */
-__host__ __device__ inline double f(double x, double y, double z) {
-    return std::exp(-(x * x + y * y + z * z))
-         * std::sin(5.0 * x)
-         * std::cos(5.0 * y)
-         * std::sin(5.0 * z);
+__host__ __device__ inline double f(double x, double y, double z)
+{
+    return std::exp(-(x * x + y * y + z * z)) * std::sin(5.0 * x) * std::cos(5.0 * y) * std::sin(5.0 * z);
 }
 
 // ============================================================
@@ -122,7 +121,8 @@ __host__ __device__ inline double f(double x, double y, double z) {
  * @return Estimated integral value
  */
 static double monteCarloCPU(std::size_t num_samples,
-                            std::size_t samples_per_iter) {
+                            std::size_t samples_per_iter)
+{
     const std::size_t num_chunks =
         (num_samples + samples_per_iter - 1) / samples_per_iter;
 
@@ -134,17 +134,18 @@ static double monteCarloCPU(std::size_t num_samples,
         chunks.begin(), chunks.end(),
         0.0,
         std::plus<double>(),
-        [samples_per_iter](std::size_t) {
+        [samples_per_iter](std::size_t)
+        {
             thread_local std::mt19937 rng(std::random_device{}());
             thread_local std::uniform_real_distribution<double> dist(0.0, 1.0);
 
             double local_sum = 0.0;
-            for (std::size_t i = 0; i < samples_per_iter; ++i) {
+            for (std::size_t i = 0; i < samples_per_iter; ++i)
+            {
                 local_sum += f(dist(rng), dist(rng), dist(rng));
             }
             return local_sum;
-        }
-    );
+        });
 
     return sum / static_cast<double>(num_samples);
 }
@@ -164,9 +165,10 @@ static double monteCarloCPU(std::size_t num_samples,
  * @param num_samples Total number of Monte Carlo samples
  * @param seed Random seed for hipRAND
  */
-static __global__ void monteCarloGPU(double* result,
+static __global__ void monteCarloGPU(double *result,
                                      std::size_t num_samples,
-                                     unsigned long long seed) {
+                                     unsigned long long seed)
+{
     const std::size_t idx =
         blockIdx.x * blockDim.x + threadIdx.x;
     const std::size_t stride =
@@ -176,12 +178,12 @@ static __global__ void monteCarloGPU(double* result,
     hiprand_init(seed, idx, 0, &state);
 
     double local_sum = 0.0;
-    for (std::size_t i = idx; i < num_samples; i += stride) {
+    for (std::size_t i = idx; i < num_samples; i += stride)
+    {
         local_sum += f(
             hiprand_uniform_double(&state),
             hiprand_uniform_double(&state),
-            hiprand_uniform_double(&state)
-        );
+            hiprand_uniform_double(&state));
     }
 
     atomicAdd(result, local_sum);
@@ -203,12 +205,13 @@ static __global__ void monteCarloGPU(double* result,
  *
  * @return int Returns EXIT_SUCCESS on successful execution.
  */
-int main() {
+int main()
+{
     // ============================================================
     // GPU Monte Carlo
     // ============================================================
 
-    double* d_result = nullptr;
+    double *d_result = nullptr;
     HIP_CHECK(hipMalloc(&d_result, sizeof(double)));
     HIP_CHECK(hipMemset(d_result, 0, sizeof(double)));
 
@@ -218,8 +221,7 @@ int main() {
     const std::size_t threads = THREADS_PER_BLOCK;
     const std::size_t blocks = std::min(
         (N + threads - 1) / threads,
-        static_cast<std::size_t>(prop.multiProcessorCount) * 64
-    );
+        static_cast<std::size_t>(prop.multiProcessorCount) * 64);
 
     std::cout << "GPU config: "
               << blocks << " blocks x "
@@ -232,8 +234,7 @@ int main() {
         dim3(static_cast<unsigned int>(blocks)),
         dim3(static_cast<unsigned int>(threads)),
         0, 0,
-        d_result, N, 1234ULL
-    );
+        d_result, N, 1234ULL);
 
     HIP_CHECK(hipGetLastError());
     HIP_CHECK(hipDeviceSynchronize());

@@ -53,11 +53,12 @@
  *
  * Prints the error message and exits if the HIP function fails.
  */
-#define HIP_CHECK(err) \
-    if (err != hipSuccess) { \
+#define HIP_CHECK(err)                                       \
+    if (err != hipSuccess)                                   \
+    {                                                        \
         std::cerr << "HIP error: " << hipGetErrorString(err) \
-                  << " at line " << __LINE__ << std::endl; \
-        std::exit(EXIT_FAILURE); \
+                  << " at line " << __LINE__ << std::endl;   \
+        std::exit(EXIT_FAILURE);                             \
     }
 
 /**
@@ -65,10 +66,11 @@
  *
  * Prints the error message and exits if the hipSPARSE function fails.
  */
-#define HIPSPARSE_CHECK(err) \
-    if (err != HIPSPARSE_STATUS_SUCCESS) { \
+#define HIPSPARSE_CHECK(err)                                              \
+    if (err != HIPSPARSE_STATUS_SUCCESS)                                  \
+    {                                                                     \
         std::cerr << "hipSPARSE error at line " << __LINE__ << std::endl; \
-        std::exit(EXIT_FAILURE); \
+        std::exit(EXIT_FAILURE);                                          \
     }
 
 /**
@@ -115,7 +117,7 @@ int main()
     std::vector<double> hB_v(nnzB);        /**< Values of B */
 
     // Random number generation
-    std::mt19937 rng(123); 
+    std::mt19937 rng(123);
     std::uniform_int_distribution<size_t> col_dist(0, A_cols - 1);
     std::uniform_real_distribution<double> val_dist(0.1, 10.0);
 
@@ -130,7 +132,7 @@ int main()
         {
             size_t i_size_t = static_cast<size_t>(i);
             hA_ci[i_size_t] = static_cast<int>(col_dist(rng));
-            hA_v[i_size_t]  = val_dist(rng);
+            hA_v[i_size_t] = val_dist(rng);
         }
     }
 
@@ -145,7 +147,7 @@ int main()
         {
             size_t i_size_t = static_cast<size_t>(i);
             hB_ci[i_size_t] = static_cast<int>(col_dist(rng));
-            hB_v[i_size_t]  = val_dist(rng);
+            hB_v[i_size_t] = val_dist(rng);
         }
     }
 
@@ -157,46 +159,46 @@ int main()
 
     HIP_CHECK(hipMalloc(&dA_rp, (A_rows + 1) * sizeof(int)));
     HIP_CHECK(hipMalloc(&dA_ci, nnzA * sizeof(int)));
-    HIP_CHECK(hipMalloc(&dA_v,  nnzA * sizeof(double)));
+    HIP_CHECK(hipMalloc(&dA_v, nnzA * sizeof(double)));
 
     HIP_CHECK(hipMalloc(&dB_rp, (B_rows + 1) * sizeof(int)));
     HIP_CHECK(hipMalloc(&dB_ci, nnzB * sizeof(int)));
-    HIP_CHECK(hipMalloc(&dB_v,  nnzB * sizeof(double)));
+    HIP_CHECK(hipMalloc(&dB_v, nnzB * sizeof(double)));
 
     HIP_CHECK(hipMemcpy(dA_rp, hA_rp.data(), (A_rows + 1) * sizeof(int), hipMemcpyHostToDevice));
     HIP_CHECK(hipMemcpy(dA_ci, hA_ci.data(), nnzA * sizeof(int), hipMemcpyHostToDevice));
-    HIP_CHECK(hipMemcpy(dA_v,  hA_v.data(),  nnzA * sizeof(double), hipMemcpyHostToDevice));
+    HIP_CHECK(hipMemcpy(dA_v, hA_v.data(), nnzA * sizeof(double), hipMemcpyHostToDevice));
 
     HIP_CHECK(hipMemcpy(dB_rp, hB_rp.data(), (B_rows + 1) * sizeof(int), hipMemcpyHostToDevice));
     HIP_CHECK(hipMemcpy(dB_ci, hB_ci.data(), nnzB * sizeof(int), hipMemcpyHostToDevice));
-    HIP_CHECK(hipMemcpy(dB_v,  hB_v.data(),  nnzB * sizeof(double), hipMemcpyHostToDevice));
+    HIP_CHECK(hipMemcpy(dB_v, hB_v.data(), nnzB * sizeof(double), hipMemcpyHostToDevice));
 
     // ------------------------------------------------------------
     // Create CSR descriptors
     // ------------------------------------------------------------
     hipsparseSpMatDescr_t matA, matB, matC;
     HIPSPARSE_CHECK(hipsparseCreateCsr(&matA,
-        static_cast<int64_t>(A_rows),
-        static_cast<int64_t>(A_cols),
-        static_cast<int64_t>(nnzA),
-        dA_rp, dA_ci, dA_v,
-        HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
-        HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
+                                       static_cast<int64_t>(A_rows),
+                                       static_cast<int64_t>(A_cols),
+                                       static_cast<int64_t>(nnzA),
+                                       dA_rp, dA_ci, dA_v,
+                                       HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
+                                       HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
 
     HIPSPARSE_CHECK(hipsparseCreateCsr(&matB,
-        static_cast<int64_t>(B_rows),
-        static_cast<int64_t>(B_cols),
-        static_cast<int64_t>(nnzB),
-        dB_rp, dB_ci, dB_v,
-        HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
-        HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
+                                       static_cast<int64_t>(B_rows),
+                                       static_cast<int64_t>(B_cols),
+                                       static_cast<int64_t>(nnzB),
+                                       dB_rp, dB_ci, dB_v,
+                                       HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
+                                       HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
 
     HIPSPARSE_CHECK(hipsparseCreateCsr(&matC,
-        static_cast<int64_t>(A_rows),
-        static_cast<int64_t>(B_cols),
-        0, nullptr, nullptr, nullptr,
-        HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
-        HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
+                                       static_cast<int64_t>(A_rows),
+                                       static_cast<int64_t>(B_cols),
+                                       0, nullptr, nullptr, nullptr,
+                                       HIPSPARSE_INDEX_32I, HIPSPARSE_INDEX_32I,
+                                       HIPSPARSE_INDEX_BASE_ZERO, HIP_R_64F));
 
     // ------------------------------------------------------------
     // SpGEMM parameters and descriptor
@@ -212,37 +214,37 @@ int main()
     void *dBuffer1 = nullptr, *dBuffer2 = nullptr;
 
     HIPSPARSE_CHECK(hipsparseSpGEMM_workEstimation(handle,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        &alpha, matA, matB, &beta, matC,
-        HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
-        spgemmDesc, &bufferSize1, nullptr));
+                                                   HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                                   HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                                   &alpha, matA, matB, &beta, matC,
+                                                   HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
+                                                   spgemmDesc, &bufferSize1, nullptr));
 
     HIP_CHECK(hipMalloc(&dBuffer1, bufferSize1));
     HIPSPARSE_CHECK(hipsparseSpGEMM_workEstimation(handle,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        &alpha, matA, matB, &beta, matC,
-        HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
-        spgemmDesc, &bufferSize1, dBuffer1));
+                                                   HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                                   HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                                   &alpha, matA, matB, &beta, matC,
+                                                   HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
+                                                   spgemmDesc, &bufferSize1, dBuffer1));
 
     // ------------------------------------------------------------
     // Step 2: Compute
     // ------------------------------------------------------------
     HIPSPARSE_CHECK(hipsparseSpGEMM_compute(handle,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        &alpha, matA, matB, &beta, matC,
-        HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
-        spgemmDesc, &bufferSize2, nullptr));
+                                            HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                            HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                            &alpha, matA, matB, &beta, matC,
+                                            HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
+                                            spgemmDesc, &bufferSize2, nullptr));
 
     HIP_CHECK(hipMalloc(&dBuffer2, bufferSize2));
     HIPSPARSE_CHECK(hipsparseSpGEMM_compute(handle,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        &alpha, matA, matB, &beta, matC,
-        HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
-        spgemmDesc, &bufferSize2, dBuffer2));
+                                            HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                            HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                            &alpha, matA, matB, &beta, matC,
+                                            HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
+                                            spgemmDesc, &bufferSize2, dBuffer2));
 
     // ------------------------------------------------------------
     // Step 3: Query nnz of C
@@ -252,13 +254,13 @@ int main()
 
     size_t C_rows = static_cast<size_t>(C_rows_int);
     size_t C_cols = static_cast<size_t>(C_cols_int);
-    size_t nnzC   = static_cast<size_t>(nnzC_int);
+    size_t nnzC = static_cast<size_t>(nnzC_int);
 
-    std::cout << "Matrix A: " << A_rows << " x " << A_cols 
+    std::cout << "Matrix A: " << A_rows << " x " << A_cols
               << " with nnz = " << nnzA << "\n";
-    std::cout << "Matrix B: " << B_rows << " x " << B_cols 
+    std::cout << "Matrix B: " << B_rows << " x " << B_cols
               << " with nnz = " << nnzB << "\n";
-    std::cout << "Matrix C: " << C_rows << " x " << C_cols 
+    std::cout << "Matrix C: " << C_rows << " x " << C_cols
               << " with nnz = " << nnzC << "\n";
 
     // ------------------------------------------------------------
@@ -269,18 +271,18 @@ int main()
 
     HIP_CHECK(hipMalloc(&dC_rp, (C_rows + 1) * sizeof(int)));
     HIP_CHECK(hipMalloc(&dC_ci, nnzC * sizeof(int)));
-    HIP_CHECK(hipMalloc(&dC_v,  nnzC * sizeof(double)));
+    HIP_CHECK(hipMalloc(&dC_v, nnzC * sizeof(double)));
     HIPSPARSE_CHECK(hipsparseCsrSetPointers(matC, dC_rp, dC_ci, dC_v));
 
     // ------------------------------------------------------------
     // Step 5: Copy result
     // ------------------------------------------------------------
     HIPSPARSE_CHECK(hipsparseSpGEMM_copy(handle,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        &alpha, matA, matB, &beta, matC,
-        HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
-        spgemmDesc));
+                                         HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                         HIPSPARSE_OPERATION_NON_TRANSPOSE,
+                                         &alpha, matA, matB, &beta, matC,
+                                         HIP_R_64F, HIPSPARSE_SPGEMM_DEFAULT,
+                                         spgemmDesc));
 
     // ------------------------------------------------------------
     // Copy first 10 entries to host
@@ -290,7 +292,7 @@ int main()
     std::vector<double> hC_v(print_nnz);
 
     HIP_CHECK(hipMemcpy(hC_ci.data(), dC_ci, print_nnz * sizeof(int), hipMemcpyDeviceToHost));
-    HIP_CHECK(hipMemcpy(hC_v.data(),  dC_v,  print_nnz * sizeof(double), hipMemcpyDeviceToHost));
+    HIP_CHECK(hipMemcpy(hC_v.data(), dC_v, print_nnz * sizeof(double), hipMemcpyDeviceToHost));
 
     std::cout << "First few entries of C:\n";
     for (size_t i = 0; i < print_nnz; ++i)
@@ -300,13 +302,13 @@ int main()
     // ------------------------------------------------------------
     // Cleanup
     // ------------------------------------------------------------
-    HIP_CHECK(hipFree(dA_rp)); 
-    HIP_CHECK(hipFree(dA_ci)); 
+    HIP_CHECK(hipFree(dA_rp));
+    HIP_CHECK(hipFree(dA_ci));
     HIP_CHECK(hipFree(dA_v));
     HIP_CHECK(hipFree(dB_rp));
     HIP_CHECK(hipFree(dB_ci));
     HIP_CHECK(hipFree(dB_v));
-    HIP_CHECK(hipFree(dC_rp)); 
+    HIP_CHECK(hipFree(dC_rp));
     HIP_CHECK(hipFree(dC_ci));
     HIP_CHECK(hipFree(dC_v));
     HIP_CHECK(hipFree(dBuffer1));

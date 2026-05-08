@@ -21,7 +21,7 @@
  * [hostname:PID] Rank 1 bound to package[1][core:24-47]
  * [hostname:PID] Rank 2 bound to package[2][core:48-71]
  * [hostname:PID] Rank 3 bound to package[3][core:72-95]
- * 
+ *
  * Msg size (MB) | Rank 0 BW (GB/s) | Send[0] | Recv[0] | Rank 1 BW (GB/s) | Send[0] | Recv[0] | Rank 2 BW (GB/s) | Send[0] | Recv[0] | Rank 3 BW (GB/s) | Send[0] | Recv[0] |
  *         67.11 |           164.67 |    1.00 |    4.00 |           165.22 |    2.00 |    1.00 |           163.56 |    3.00 |    2.00 |           162.95 |    4.00 |    3.00 |
  *        134.22 |           169.64 |    1.00 |    4.00 |           170.57 |    2.00 |    1.00 |           170.66 |    3.00 |    2.00 |           165.90 |    4.00 |    3.00 |
@@ -53,52 +53,58 @@
 #include <rccl/rccl.h>
 
 #ifdef USE_NUMA
-#define _GNU_SOURCE       /* Needed for sched_getcpu() */
-#include <sched.h>        /* For sched_getcpu() */
-#include <numa.h>         /* For NUMA allocation and node binding */
+#define _GNU_SOURCE /* Needed for sched_getcpu() */
+#include <sched.h>  /* For sched_getcpu() */
+#include <numa.h>   /* For NUMA allocation and node binding */
 #endif
 
 /* ------------------------------------------------------------- */
 /* Configuration                                                 */
 /* ------------------------------------------------------------- */
-#define MIN_MSG_SIZE  (1LL << 26)   /* 64 MB */
-#define MAX_MSG_SIZE  (1LL << 33)   /* 8 GB */
-#define N_REPEAT      10            /* Number of repetitions per message size */
-#define N_WARMUP      2             /* Number of warm-up iterations */
+#define MIN_MSG_SIZE (1LL << 26) /* 64 MB */
+#define MAX_MSG_SIZE (1LL << 33) /* 8 GB */
+#define N_REPEAT 10              /* Number of repetitions per message size */
+#define N_WARMUP 2               /* Number of warm-up iterations */
 
 /* ------------------------------------------------------------- */
 /* HIP and RCCL error checking macros                             */
 /* ------------------------------------------------------------- */
-#define HIP_CHECK(call)                                                \
-    do {                                                               \
-        hipError_t err = (call);                                       \
-        if (err != hipSuccess) {                                       \
-            fprintf(stderr, "HIP error %s at %s:%d\n",                 \
-                    hipGetErrorString(err), __FILE__, __LINE__);       \
-            MPI_Abort(MPI_COMM_WORLD, -1);                             \
-        }                                                              \
+#define HIP_CHECK(call)                                          \
+    do                                                           \
+    {                                                            \
+        hipError_t err = (call);                                 \
+        if (err != hipSuccess)                                   \
+        {                                                        \
+            fprintf(stderr, "HIP error %s at %s:%d\n",           \
+                    hipGetErrorString(err), __FILE__, __LINE__); \
+            MPI_Abort(MPI_COMM_WORLD, -1);                       \
+        }                                                        \
     } while (0)
 
-#define RCCL_CHECK(call)                                               \
-    do {                                                               \
-        ncclResult_t res = (call);                                     \
-        if (res != ncclSuccess) {                                      \
-            fprintf(stderr, "RCCL error %s at %s:%d\n",                \
-                    ncclGetErrorString(res), __FILE__, __LINE__);      \
-            MPI_Abort(MPI_COMM_WORLD, -1);                             \
-        }                                                              \
+#define RCCL_CHECK(call)                                          \
+    do                                                            \
+    {                                                             \
+        ncclResult_t res = (call);                                \
+        if (res != ncclSuccess)                                   \
+        {                                                         \
+            fprintf(stderr, "RCCL error %s at %s:%d\n",           \
+                    ncclGetErrorString(res), __FILE__, __LINE__); \
+            MPI_Abort(MPI_COMM_WORLD, -1);                        \
+        }                                                         \
     } while (0)
 
 /* ------------------------------------------------------------- */
 /* Memory allocation check macro                                   */
 /* ------------------------------------------------------------- */
-#define CHECK_ALLOC(ptr)                                               \
-    do {                                                               \
-        if (!(ptr)) {                                                  \
-            fprintf(stderr, "Allocation failed at %s:%d\n",            \
-                    __FILE__, __LINE__);                               \
-            MPI_Abort(MPI_COMM_WORLD, -1);                             \
-        }                                                              \
+#define CHECK_ALLOC(ptr)                                    \
+    do                                                      \
+    {                                                       \
+        if (!(ptr))                                         \
+        {                                                   \
+            fprintf(stderr, "Allocation failed at %s:%d\n", \
+                    __FILE__, __LINE__);                    \
+            MPI_Abort(MPI_COMM_WORLD, -1);                  \
+        }                                                   \
     } while (0)
 
 /* ------------------------------------------------------------- */
@@ -123,10 +129,10 @@ int main(int argc, char *argv[])
     /* Optional NUMA and CPU affinity */
     /* ------------------------- */
 #ifdef USE_NUMA
-    int cpu  = sched_getcpu();
+    int cpu = sched_getcpu();
     int node = numa_node_of_cpu(cpu);
-    numa_run_on_node(node);     /* Bind process to NUMA node */
-    numa_set_localalloc();      /* Allocate future memory on local node */
+    numa_run_on_node(node); /* Bind process to NUMA node */
+    numa_set_localalloc();  /* Allocate future memory on local node */
 #endif
 
     /* ------------------------- */
@@ -157,7 +163,8 @@ int main(int argc, char *argv[])
     /* ------------------------- */
     /* Print header              */
     /* ------------------------- */
-    if (world_rank == 0) {
+    if (world_rank == 0)
+    {
         printf("\nMsg size (MB) |");
         for (int r = 0; r < world_size; r++)
             printf(" Rank %d BW (GB/s) | Send[0] | Recv[0] |", r);
@@ -172,7 +179,8 @@ int main(int argc, char *argv[])
          msg_size <<= 1)
     {
         const size_t count = msg_size / sizeof(double);
-        if (count > INT_MAX) {
+        if (count > INT_MAX)
+        {
             fprintf(stderr, "Message too large for MPI count (%zu elements)\n", count);
             MPI_Abort(MPI_COMM_WORLD, -1);
         }
@@ -182,8 +190,8 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         double *d_send = NULL;
         double *d_recv = NULL;
-        HIP_CHECK(hipMalloc((void**)&d_send, msg_size));
-        HIP_CHECK(hipMalloc((void**)&d_recv, msg_size));
+        HIP_CHECK(hipMalloc((void **)&d_send, msg_size));
+        HIP_CHECK(hipMalloc((void **)&d_recv, msg_size));
 
         /* ------------------------- */
         /* Initialize host send buffer */
@@ -201,7 +209,8 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         /* Warm-up iterations        */
         /* ------------------------- */
-        for (int i = 0; i < N_WARMUP; i++) {
+        for (int i = 0; i < N_WARMUP; i++)
+        {
             RCCL_CHECK(ncclGroupStart());
             RCCL_CHECK(ncclRecv(d_recv, count, ncclDouble, prev, comm, stream));
             RCCL_CHECK(ncclSend(d_send, count, ncclDouble, next, comm, stream));
@@ -217,7 +226,8 @@ int main(int argc, char *argv[])
         HIP_CHECK(hipEventCreate(&start));
         HIP_CHECK(hipEventCreate(&stop));
 
-        for (int rep = 0; rep < N_REPEAT; rep++) {
+        for (int rep = 0; rep < N_REPEAT; rep++)
+        {
             HIP_CHECK(hipEventRecord(start, stream));
 
             RCCL_CHECK(ncclGroupStart());
@@ -255,9 +265,10 @@ int main(int argc, char *argv[])
         double *all_send0 = NULL;
         double *all_recv0 = NULL;
 
-        if (world_rank == 0) {
+        if (world_rank == 0)
+        {
             const size_t n = (size_t)world_size;
-            all_bw    = malloc(n * sizeof(double));
+            all_bw = malloc(n * sizeof(double));
             all_send0 = malloc(n * sizeof(double));
             all_recv0 = malloc(n * sizeof(double));
             CHECK_ALLOC(all_bw);
@@ -266,15 +277,17 @@ int main(int argc, char *argv[])
         }
 
         MPI_Gather(&bw_GBps, 1, MPI_DOUBLE, all_bw, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Gather(&send0,   1, MPI_DOUBLE, all_send0, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        MPI_Gather(&recv0,   1, MPI_DOUBLE, all_recv0, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Gather(&send0, 1, MPI_DOUBLE, all_send0, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Gather(&recv0, 1, MPI_DOUBLE, all_recv0, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         /* ------------------------- */
         /* Print results on rank 0   */
         /* ------------------------- */
-        if (world_rank == 0) {
+        if (world_rank == 0)
+        {
             printf("%13.2f |", (double)msg_size * 1.0e-6);
-            for (int r = 0; r < world_size; r++) {
+            for (int r = 0; r < world_size; r++)
+            {
                 printf(" %16.2f | %7.2f | %7.2f |",
                        all_bw[r], all_send0[r], all_recv0[r]);
             }

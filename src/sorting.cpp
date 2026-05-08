@@ -52,15 +52,16 @@
  *
  * Prints the error message and exits if the HIP function fails.
  */
-#define HIP_CHECK(status)                                         \
-    {                                                             \
-        hipError_t err = status;                                  \
-        if (err != hipSuccess) {                                  \
-            std::cerr << "HIP Error: "                             \
-                      << hipGetErrorString(err)                   \
-                      << " at line " << __LINE__ << std::endl;   \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+#define HIP_CHECK(status)                                      \
+    {                                                          \
+        hipError_t err = status;                               \
+        if (err != hipSuccess)                                 \
+        {                                                      \
+            std::cerr << "HIP Error: "                         \
+                      << hipGetErrorString(err)                \
+                      << " at line " << __LINE__ << std::endl; \
+            std::exit(EXIT_FAILURE);                           \
+        }                                                      \
     }
 
 /**
@@ -68,14 +69,15 @@
  *
  * Prints the error code and exits if the hipRAND function fails.
  */
-#define HIPRAND_CHECK(status)                                     \
-    {                                                             \
-        hiprandStatus_t err = status;                             \
-        if (err != HIPRAND_STATUS_SUCCESS) {                      \
-            std::cerr << "hipRAND Error code " << err             \
-                      << " at line " << __LINE__ << std::endl;   \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+#define HIPRAND_CHECK(status)                                  \
+    {                                                          \
+        hiprandStatus_t err = status;                          \
+        if (err != HIPRAND_STATUS_SUCCESS)                     \
+        {                                                      \
+            std::cerr << "hipRAND Error code " << err          \
+                      << " at line " << __LINE__ << std::endl; \
+            std::exit(EXIT_FAILURE);                           \
+        }                                                      \
     }
 
 // ============================================================
@@ -106,12 +108,13 @@ constexpr std::size_t N = 1ULL << 30;
  *
  * @return int Returns EXIT_SUCCESS on successful execution.
  */
-int main() {
+int main()
+{
     // ============================================================
     // Allocate GPU memory
     // ============================================================
 
-    int* d_data = nullptr;
+    int *d_data = nullptr;
     HIP_CHECK(hipMalloc(&d_data, N * sizeof(int)));
 
     // ============================================================
@@ -120,19 +123,15 @@ int main() {
 
     hiprandGenerator_t generator;
     HIPRAND_CHECK(
-        hiprandCreateGenerator(&generator, HIPRAND_RNG_PSEUDO_DEFAULT)
-    );
+        hiprandCreateGenerator(&generator, HIPRAND_RNG_PSEUDO_DEFAULT));
     HIPRAND_CHECK(
-        hiprandSetPseudoRandomGeneratorSeed(generator, 12345ULL)
-    );
+        hiprandSetPseudoRandomGeneratorSeed(generator, 12345ULL));
 
     HIPRAND_CHECK(
         hiprandGenerate(
             generator,
-            reinterpret_cast<unsigned int*>(d_data),
-            N
-        )
-    );
+            reinterpret_cast<unsigned int *>(d_data),
+            N));
     HIP_CHECK(hipDeviceSynchronize());
 
     // ============================================================
@@ -145,15 +144,13 @@ int main() {
             h_cpu.data(),
             d_data,
             N * sizeof(int),
-            hipMemcpyDeviceToHost
-        )
-    );
+            hipMemcpyDeviceToHost));
 
     // ============================================================
     // GPU radix sort using hipCUB
     // ============================================================
 
-    void* d_temp_storage = nullptr;
+    void *d_temp_storage = nullptr;
     std::size_t temp_storage_bytes = 0;
 
     // Query temporary storage size
@@ -163,9 +160,7 @@ int main() {
             temp_storage_bytes,
             d_data,
             d_data,
-            N
-        )
-    );
+            N));
 
     HIP_CHECK(hipMalloc(&d_temp_storage, temp_storage_bytes));
 
@@ -177,9 +172,7 @@ int main() {
             temp_storage_bytes,
             d_data,
             d_data,
-            N
-        )
-    );
+            N));
     HIP_CHECK(hipDeviceSynchronize());
 
     auto gpu_end = std::chrono::high_resolution_clock::now();
@@ -193,9 +186,7 @@ int main() {
             h_gpu.data(),
             d_data,
             N * sizeof(int),
-            hipMemcpyDeviceToHost
-        )
-    );
+            hipMemcpyDeviceToHost));
 
     // ============================================================
     // CPU parallel sort

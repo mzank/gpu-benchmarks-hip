@@ -17,7 +17,7 @@
  *
  * NUMA library usage is optional. If available, it improves CPU memory locality.
  * If not available, the code will still run correctly.
- * 
+ *
  * Example output (measured on 1 node with 4 AMD MI300A APUs):
  * \code
  * [hostname:PID] Rank 0 bound to package[0][core:0-23]
@@ -53,42 +53,46 @@
 #include <hip/hip_runtime.h>
 
 #ifdef USE_NUMA
-#define _GNU_SOURCE       /* Needed for sched_getcpu() */
-#include <sched.h>        /* For sched_getcpu() */
-#include <numa.h>         /* For NUMA allocation and node binding */
+#define _GNU_SOURCE /* Needed for sched_getcpu() */
+#include <sched.h>  /* For sched_getcpu() */
+#include <numa.h>   /* For NUMA allocation and node binding */
 #endif
 
 /* ------------------------------------------------------------- */
 /* Configuration                                                 */
 /* ------------------------------------------------------------- */
-#define MIN_MSG_SIZE  (1LL << 26)   /* 64 MB */
-#define MAX_MSG_SIZE  (1LL << 33)   /* 8 GB */
-#define N_REPEAT      10            /* Number of repetitions per message size */
+#define MIN_MSG_SIZE (1LL << 26) /* 64 MB */
+#define MAX_MSG_SIZE (1LL << 33) /* 8 GB */
+#define N_REPEAT 10              /* Number of repetitions per message size */
 
 /* ------------------------------------------------------------- */
 /* HIP error checking macro                                       */
 /* ------------------------------------------------------------- */
-#define HIP_CHECK(call)                                                \
-    do {                                                               \
-        hipError_t err = (call);                                       \
-        if (err != hipSuccess) {                                       \
-            fprintf(stderr,                                            \
-                    "HIP error %s at %s:%d\n",                         \
-                    hipGetErrorString(err), __FILE__, __LINE__);       \
-            MPI_Abort(MPI_COMM_WORLD, -1);                             \
-        }                                                              \
+#define HIP_CHECK(call)                                          \
+    do                                                           \
+    {                                                            \
+        hipError_t err = (call);                                 \
+        if (err != hipSuccess)                                   \
+        {                                                        \
+            fprintf(stderr,                                      \
+                    "HIP error %s at %s:%d\n",                   \
+                    hipGetErrorString(err), __FILE__, __LINE__); \
+            MPI_Abort(MPI_COMM_WORLD, -1);                       \
+        }                                                        \
     } while (0)
 
 /* ------------------------------------------------------------- */
 /* Memory allocation check macro                                   */
 /* ------------------------------------------------------------- */
-#define CHECK_ALLOC(ptr)                                               \
-    do {                                                               \
-        if (!(ptr)) {                                                  \
-            fprintf(stderr, "Allocation failed at %s:%d\n",            \
-                    __FILE__, __LINE__);                               \
-            MPI_Abort(MPI_COMM_WORLD, -1);                             \
-        }                                                              \
+#define CHECK_ALLOC(ptr)                                    \
+    do                                                      \
+    {                                                       \
+        if (!(ptr))                                         \
+        {                                                   \
+            fprintf(stderr, "Allocation failed at %s:%d\n", \
+                    __FILE__, __LINE__);                    \
+            MPI_Abort(MPI_COMM_WORLD, -1);                  \
+        }                                                   \
     } while (0)
 
 /* ------------------------------------------------------------- */
@@ -109,10 +113,10 @@ int main(int argc, char *argv[])
     /* Optional NUMA and CPU affinity */
     /* ------------------------- */
 #ifdef USE_NUMA
-    int cpu  = sched_getcpu();
+    int cpu = sched_getcpu();
     int node = numa_node_of_cpu(cpu);
-    numa_run_on_node(node);     /* Bind process to NUMA node */
-    numa_set_localalloc();      /* Allocate future memory on local node */
+    numa_run_on_node(node); /* Bind process to NUMA node */
+    numa_set_localalloc();  /* Allocate future memory on local node */
 #endif
 
     /* ------------------------- */
@@ -147,9 +151,11 @@ int main(int argc, char *argv[])
     /* ------------------------- */
     /* Print header              */
     /* ------------------------- */
-    if (world_rank == 0) {
+    if (world_rank == 0)
+    {
         printf("\nMsg size (MB) |");
-        for (int r = 0; r < world_size; r++) {
+        for (int r = 0; r < world_size; r++)
+        {
             printf(" Rank %d BW (GB/s) | Send[0] | Recv[0] |", r);
         }
         printf("\n");
@@ -160,10 +166,12 @@ int main(int argc, char *argv[])
     /* ------------------------- */
     for (size_t msg_size = MIN_MSG_SIZE;
          msg_size <= MAX_MSG_SIZE;
-         msg_size <<= 1) {
+         msg_size <<= 1)
+    {
 
         const size_t count = msg_size / sizeof(double);
-        if (count > INT_MAX) {
+        if (count > INT_MAX)
+        {
             fprintf(stderr, "Message too large for MPI count (%zu elements)\n", count);
             MPI_Abort(MPI_COMM_WORLD, -1);
         }
@@ -174,8 +182,8 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         double *d_send = NULL;
         double *d_recv = NULL;
-        HIP_CHECK(hipMalloc((void**)&d_send, msg_size));
-        HIP_CHECK(hipMalloc((void**)&d_recv, msg_size));
+        HIP_CHECK(hipMalloc((void **)&d_send, msg_size));
+        HIP_CHECK(hipMalloc((void **)&d_recv, msg_size));
 
         /* ------------------------- */
         /* Allocate host buffers for MPI */
@@ -188,7 +196,8 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         /* Initialize host send buffer */
         /* ------------------------- */
-        for (size_t i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++)
+        {
             h_send[i] = (double)(world_rank + 1);
         }
 
@@ -202,7 +211,8 @@ int main(int argc, char *argv[])
         double total_time = 0.0;
         MPI_Request reqs[2];
 
-        for (int rep = 0; rep < N_REPEAT; rep++) {
+        for (int rep = 0; rep < N_REPEAT; rep++)
+        {
 
             HIP_CHECK(hipDeviceSynchronize());
             double t0 = MPI_Wtime();
@@ -239,13 +249,14 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         /* Gather results to rank 0   */
         /* ------------------------- */
-        double *all_bw    = NULL;
+        double *all_bw = NULL;
         double *all_send0 = NULL;
         double *all_recv0 = NULL;
 
-        if (world_rank == 0) {
+        if (world_rank == 0)
+        {
             const size_t n = (size_t)world_size;
-            all_bw    = malloc(n * sizeof(double));
+            all_bw = malloc(n * sizeof(double));
             all_send0 = malloc(n * sizeof(double));
             all_recv0 = malloc(n * sizeof(double));
             CHECK_ALLOC(all_bw);
@@ -260,9 +271,11 @@ int main(int argc, char *argv[])
         /* ------------------------- */
         /* Print results on rank 0    */
         /* ------------------------- */
-        if (world_rank == 0) {
+        if (world_rank == 0)
+        {
             printf("%13.2f |", (double)msg_size * 1.0e-6);
-            for (int r = 0; r < world_size; r++) {
+            for (int r = 0; r < world_size; r++)
+            {
                 printf(" %16.2f | %7.2f | %7.2f |",
                        all_bw[r], all_send0[r], all_recv0[r]);
             }

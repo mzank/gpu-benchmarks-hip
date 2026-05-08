@@ -52,14 +52,15 @@
  *
  * Prints the error message and exits if the HIP function fails.
  */
-#define HIP_CHECK(status)                                         \
-    {                                                             \
-        hipError_t err = status;                                  \
-        if (err != hipSuccess) {                                  \
-            std::cerr << "HIP Error: " << hipGetErrorString(err)  \
+#define HIP_CHECK(status)                                        \
+    {                                                            \
+        hipError_t err = status;                                 \
+        if (err != hipSuccess)                                   \
+        {                                                        \
+            std::cerr << "HIP Error: " << hipGetErrorString(err) \
                       << " at line " << __LINE__ << std::endl;   \
-            std::exit(EXIT_FAILURE);                              \
-        }                                                         \
+            std::exit(EXIT_FAILURE);                             \
+        }                                                        \
     }
 
 /**
@@ -82,9 +83,9 @@ constexpr uint32_t THREADS_PER_BLOCK = 256;
  * @param output Pointer to output array storing partial sums.
  * @param size Number of elements in input vector.
  */
-static __global__ void block_reduce(const double* input,
-                             double* output,
-                             size_t size)
+static __global__ void block_reduce(const double *input,
+                                    double *output,
+                                    size_t size)
 {
     __shared__ double sdata[THREADS_PER_BLOCK];
 
@@ -92,19 +93,24 @@ static __global__ void block_reduce(const double* input,
     const size_t idx = static_cast<size_t>(blockIdx.x) * blockDim.x * 2 + tid;
 
     double sum = 0.0;
-    if (idx < size) sum += input[idx];
-    if (idx + blockDim.x < size) sum += input[idx + blockDim.x];
+    if (idx < size)
+        sum += input[idx];
+    if (idx + blockDim.x < size)
+        sum += input[idx + blockDim.x];
 
     sdata[tid] = sum;
     __syncthreads();
 
     // Reduction in shared memory
-    for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1) {
-        if (tid < s) sdata[tid] += sdata[tid + s];
+    for (unsigned int s = blockDim.x / 2; s > 0; s >>= 1)
+    {
+        if (tid < s)
+            sdata[tid] += sdata[tid + s];
         __syncthreads();
     }
 
-    if (tid == 0) output[blockIdx.x] = sdata[0];
+    if (tid == 0)
+        output[blockIdx.x] = sdata[0];
 }
 
 /**
@@ -142,8 +148,8 @@ int main()
     // -------------------------
     // GPU memory allocation
     // -------------------------
-    double* d_data = nullptr;
-    double* d_partial = nullptr;
+    double *d_data = nullptr;
+    double *d_partial = nullptr;
 
     HIP_CHECK(hipMalloc(&d_data, ARRAY_SIZE * sizeof(double)));
 
@@ -170,7 +176,8 @@ int main()
     HIP_CHECK(hipDeviceSynchronize());
 
     size_t s = blocks;
-    while (s > 1) {
+    while (s > 1)
+    {
         const size_t next_blocks = (s + THREADS_PER_BLOCK * 2 - 1) / (THREADS_PER_BLOCK * 2);
 
         hipLaunchKernelGGL(
